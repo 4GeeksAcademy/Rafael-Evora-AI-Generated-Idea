@@ -5,10 +5,21 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <section className="min-h-[60vh] flex flex-col items-center justify-center bg-gradient-to-br from-teal-200 to-coral-100 text-center py-16 px-4">
-        <h1 className="text-5xl font-extrabold text-teal mb-4">Miami DJ & Live Music Entertainment</h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl">Book Miami's best DJs, bands, and entertainers for your next event. Weddings, parties, corporate events, and more—experience the ultimate Miami vibe!</p>
-        <a href="/book" className="bg-teal text-white px-6 py-3 rounded-full font-semibold text-lg shadow hover:bg-coral transition-colors">Book Now</a>
+      <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center py-16 px-4 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src="/background.mp4"
+        />
+        <div className="relative z-10 w-full flex flex-col items-center justify-center">
+          <h1 className="text-5xl font-extrabold text-teal mb-4">Miami DJ & Live Music Entertainment</h1>
+          <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl">Book Miami's best DJs, bands, and entertainers for your next event. Weddings, parties, corporate events, and more—experience the ultimate Miami vibe!</p>
+          <a href="/book" className="bg-teal text-white px-6 py-3 rounded-full font-semibold text-lg shadow hover:bg-coral transition-colors">Book Now</a>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-200 to-coral-100 opacity-40 z-5 pointer-events-none" />
       </section>
       <section className="py-12 px-4 bg-white dark:bg-black">
         <h2 className="text-3xl font-bold text-teal mb-8 text-center">Featured Services</h2>
