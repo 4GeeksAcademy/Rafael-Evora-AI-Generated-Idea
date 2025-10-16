@@ -1,5 +1,4 @@
 "use client";
-import { Navbar } from "../../components/Navbar";
 import React, { useState } from "react";
 import { ProgressBar } from "../../components/ProgressBar";
 import { FormStepEventDetails } from "../../components/FormStepEventDetails";
@@ -35,7 +34,6 @@ export default function BookPage() {
 
   return (
     <>
-      <Navbar />
       <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-white dark:bg-black flex flex-col items-center">
         <h1 className="text-3xl font-bold text-teal dark:text-gray-200 mb-8 text-center">Book Your Event</h1>
         <ProgressBar steps={steps} currentStep={currentStep} />

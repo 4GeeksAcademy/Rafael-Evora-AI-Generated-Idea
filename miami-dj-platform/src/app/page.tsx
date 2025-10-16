@@ -1,10 +1,12 @@
-import Image from "next/image";
+"use client";
+
 import { Navbar } from "../components/Navbar";
+import { useSupabaseUser } from "../lib/useSupabaseUser";
 
 export default function Home() {
+  const user = useSupabaseUser();
   return (
     <>
-      <Navbar />
       <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center py-16 px-4 overflow-hidden">
         <iframe
           src="https://www.youtube.com/embed/RUbeyE84S3Y"
@@ -15,9 +17,18 @@ export default function Home() {
           title="Miami DJ Background"
         />
         <div className="relative z-10 w-full flex flex-col items-center justify-center">
+          {user && (
+            <div className="mb-4 text-lg font-semibold text-teal dark:text-gray-200">Welcome, {user.email}!</div>
+          )}
           <h1 className="text-5xl font-extrabold text-teal mb-4">Miami DJ & Live Music Entertainment</h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl">Book Miami's best DJs, bands, and entertainers for your next event. Weddings, parties, corporate events, and more—experience the ultimate Miami vibe!</p>
-          <a href="/book" className="bg-teal text-white px-6 py-3 rounded-full font-semibold text-lg shadow hover:bg-coral transition-colors">Book Now</a>
+          <a href="/book" className="bg-teal text-white px-6 py-3 rounded-full font-semibold text-lg shadow hover:bg-coral transition-colors mb-4">Book Now</a>
+          {!user && (
+            <div className="flex gap-4 justify-center">
+              <a href="/login" className="bg-teal text-white px-4 py-2 rounded font-semibold text-sm hover:bg-coral transition-colors">Login</a>
+              <a href="/signup" className="bg-coral text-white px-4 py-2 rounded font-semibold text-sm hover:bg-teal transition-colors">Sign Up</a>
+            </div>
+          )}
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-teal-200 to-coral-100 opacity-40 z-5 pointer-events-none" />
       </section>
