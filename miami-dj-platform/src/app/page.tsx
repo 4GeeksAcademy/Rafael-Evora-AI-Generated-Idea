@@ -6,13 +6,13 @@ export default function Home() {
     <>
       <Navbar />
       <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center py-16 px-4 overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
-          src="/background.mp4"
+        <iframe
+          src="https://www.youtube.com/embed/RUbeyE84S3Y"
+          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          title="Miami DJ Background"
         />
         <div className="relative z-10 w-full flex flex-col items-center justify-center">
           <h1 className="text-5xl font-extrabold text-teal mb-4">Miami DJ & Live Music Entertainment</h1>
