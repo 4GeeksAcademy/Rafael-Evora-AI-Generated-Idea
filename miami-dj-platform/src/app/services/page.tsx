@@ -31,7 +31,7 @@ const services = [
 export default function ServicesPage() {
   return (
     <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-white dark:bg-black">
-      <h1 className="text-3xl font-bold text-teal mb-8 text-center">Our Services</h1>
+      <h1 className="text-3xl font-bold text-black dark:text-white mb-8 text-center">Our Services</h1>
       <div className="grid gap-4 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
         {services.map((service) => (
           <ServiceCard key={service.title} {...service} />

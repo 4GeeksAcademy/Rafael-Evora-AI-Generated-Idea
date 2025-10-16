@@ -35,10 +35,10 @@ export default function BookPage() {
   return (
     <>
       <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-white dark:bg-black flex flex-col items-center">
-        <h1 className="text-3xl font-bold text-teal dark:text-gray-200 mb-8 text-center">Book Your Event</h1>
+        <h1 className="text-3xl font-bold text-black dark:text-white mb-8 text-center">Book Your Event</h1>
         <ProgressBar steps={steps} currentStep={currentStep} />
         <FormProvider {...methods}>
-          <form className="mt-8 w-full max-w-xl bg-white dark:bg-gray-900 rounded-lg shadow p-4 sm:p-6 text-gray-800 dark:text-gray-200" onSubmit={methods.handleSubmit(onSubmit)}>
+          <form className="mt-8 w-full max-w-xl bg-white dark:bg-gray-900 rounded-lg shadow p-4 sm:p-6 text-black dark:text-white" onSubmit={methods.handleSubmit(onSubmit)}>
             {currentStep === 0 && <FormStepEventDetails />}
             {currentStep === 1 && <FormStepEntertainment />}
             {currentStep === 2 && <FormStepTechnical />}
@@ -46,7 +46,7 @@ export default function BookPage() {
             <div className="flex justify-between mt-6">
               <button
                 type="button"
-                className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                className="px-4 py-2 rounded bg-gray-700 text-white font-semibold text-sm hover:bg-gray-500 transition-colors"
                 onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
                 disabled={currentStep === 0}
               >
@@ -55,7 +55,7 @@ export default function BookPage() {
               {currentStep < steps.length - 1 ? (
                 <button
                   type="button"
-                  className="px-4 py-2 rounded bg-teal text-white"
+                  className="px-4 py-2 rounded bg-gray-700 text-white font-semibold text-sm hover:bg-gray-500 transition-colors"
                   onClick={handleNext}
                   disabled={currentStep === steps.length - 1}
                 >
@@ -64,7 +64,7 @@ export default function BookPage() {
               ) : (
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-teal text-white"
+                  className="px-4 py-2 rounded bg-gray-700 text-white font-semibold text-sm hover:bg-gray-500 transition-colors"
                 >
                   Submit
                 </button>
