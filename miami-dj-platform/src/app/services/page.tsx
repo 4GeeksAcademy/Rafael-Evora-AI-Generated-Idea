@@ -30,8 +30,8 @@ const services = [
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-purple-700 via-blue-600 to-purple-900 dark:from-purple-900 dark:via-blue-900 dark:to-black">
-      <h1 className="text-4xl font-extrabold mb-8 text-center text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">Our Services</h1>
+    <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-blue-100 via-blue-200 to-purple-100 dark:from-blue-200 dark:via-blue-900 dark:to-black">
+      <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-700 drop-shadow-xl animate-pulse dark:text-blue-300">Our Services</h1>
       <div className="grid gap-4 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
         {services.map((service) => (
           <ServiceCard key={service.title} {...service} />

@@ -34,11 +34,11 @@ export const Navbar: React.FC = () => {
     }
   }, []);
   const navBg = isDark
-    ? "linear-gradient(90deg, #0f172a 0%, #312e81 40%, #0f172a 100%)"
-    : "linear-gradient(90deg, #7c3aed 0%, #2563eb 40%, #7c3aed 100%)";
+    ? "linear-gradient(90deg, #1e293b 0%, #312e81 40%, #1e293b 100%)"
+    : "linear-gradient(90deg, #c7d2fe 0%, #a5b4fc 40%, #c7d2fe 100%)";
   return (
     <nav
-      className="sticky top-0 z-50 w-full border-b border-neon-green dark:border-green-400 shadow-xl"
+      className="sticky top-0 z-50 w-full border-b border-blue-200 dark:border-blue-400 shadow-lg"
       style={{ background: navBg }}
     >
       <div
@@ -50,10 +50,10 @@ export const Navbar: React.FC = () => {
             <img
               src="/arove-logo.png"
               alt="Arove Logo"
-              className="h-12 w-auto block drop-shadow-[0_0_48px_rgba(124,58,237,1)] transition-all duration-300 hover:drop-shadow-[0_0_96px_rgba(124,58,237,1)]"
-              style={{ filter: 'drop-shadow(0 0 64px #7c3aed) drop-shadow(0 0 32px #fff)', transition: 'filter 0.3s' }}
-              onMouseEnter={e => e.currentTarget.style.filter = 'drop-shadow(0 0 128px #7c3aed) drop-shadow(0 0 64px #fff)'}
-              onMouseLeave={e => e.currentTarget.style.filter = 'drop-shadow(0 0 64px #7c3aed) drop-shadow(0 0 32px #fff)'}
+              className="h-12 w-auto block drop-shadow-[0_0_24px_rgba(165,180,252,0.7)] transition-all duration-300 hover:drop-shadow-[0_0_48px_rgba(165,180,252,1)]"
+              style={{ filter: 'drop-shadow(0 0 32px #a5b4fc) drop-shadow(0 0 16px #fff)', transition: 'filter 0.3s' }}
+              onMouseEnter={e => e.currentTarget.style.filter = 'drop-shadow(0 0 64px #a5b4fc) drop-shadow(0 0 32px #fff)'}
+              onMouseLeave={e => e.currentTarget.style.filter = 'drop-shadow(0 0 32px #a5b4fc) drop-shadow(0 0 16px #fff)'}
             />
           </Link>
           <Link href="/" className="font-extrabold text-3xl text-white drop-shadow-xl animate-pulse">
@@ -65,7 +65,7 @@ export const Navbar: React.FC = () => {
             <Link
               key={item.name}
               href={item.href}
-              className="text-base font-bold text-white dark:text-green-400 hover:text-neon-green dark:hover:text-green-300 transition-colors drop-shadow"
+              className="text-base font-bold text-blue-700 dark:text-blue-200 hover:text-blue-400 dark:hover:text-blue-300 transition-colors drop-shadow"
             >
               {item.name}
             </Link>
@@ -75,7 +75,7 @@ export const Navbar: React.FC = () => {
           <ThemeToggle />
           <button
             aria-label="Cart"
-            className="p-2 rounded-full focus:outline-none focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400 transition-all duration-300 relative bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 dark:from-green-400 dark:via-blue-900 dark:to-purple-900 shadow-xl hover:scale-110"
+            className="p-2 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-400 transition-all duration-300 relative bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 shadow-lg hover:scale-105"
             onClick={() => setCartOpen((open) => !open)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" className="w-6 h-6 text-black dark:text-white">
@@ -84,21 +84,21 @@ export const Navbar: React.FC = () => {
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61l1.38-7.39H6" />
             </svg>
             {items.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-neon-green text-black rounded-full px-2 text-xs font-bold">{items.length}</span>
+              <span className="absolute -top-1 -right-1 bg-blue-200 text-blue-900 rounded-full px-2 text-xs font-bold border border-blue-400">{items.length}</span>
             )}
           </button>
           {cartOpen && (
-            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-900 via-purple-800 to-blue-700 dark:from-black dark:via-purple-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-neon-green dark:border-green-400 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
-              <h3 className="text-lg font-extrabold mb-2 text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">Your Cart</h3>
+            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-purple-100 dark:from-blue-200 dark:via-purple-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+              <h3 className="text-lg font-extrabold mb-2 text-blue-700 drop-shadow-xl animate-pulse dark:text-blue-300">Your Cart</h3>
               {items.length === 0 ? (
-                <span className="text-white">Cart is empty</span>
+                <span className="text-blue-700">Cart is empty</span>
               ) : (
                 items.map((item, idx) => {
                   return (
-                    <div key={item.step} className="bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 dark:from-green-400 dark:via-blue-900 dark:to-purple-900 rounded-xl p-3 mb-2 shadow flex flex-col gap-1">
-                      <div className="font-bold text-black dark:text-white text-lg mb-1">{item.step.replace(/([A-Z])/g, ' $1').trim()}</div>
+                    <div key={item.step} className="bg-gradient-to-r from-blue-200 via-blue-400 to-purple-200 dark:from-blue-200 dark:via-blue-900 dark:to-purple-900 rounded-xl p-3 mb-2 shadow flex flex-col gap-1">
+                      <div className="font-bold text-blue-700 dark:text-blue-200 text-lg mb-1">{item.step.replace(/([A-Z])/g, ' $1').trim()}</div>
                       {item.data && typeof item.data === 'object' ? (
-                        <ul className="text-sm text-black dark:text-white pl-2">
+                        <ul className="text-sm text-blue-900 dark:text-blue-200 pl-2">
                           {Object.entries(item.data).map(([key, value]) => (
                             <li key={key} className="mb-1">
                               <span className="font-semibold capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span> <span>{String(value)}</span>
@@ -110,7 +110,7 @@ export const Navbar: React.FC = () => {
                           )}
                         </ul>
                       ) : (
-                        <span className="text-black dark:text-white">{String(item.data)}</span>
+                        <span className="text-blue-900 dark:text-blue-200">{String(item.data)}</span>
                       )}
                     </div>
                   );

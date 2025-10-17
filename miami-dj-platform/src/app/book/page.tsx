@@ -64,11 +64,11 @@ export default function BookPage() {
 
   return (
     <>
-      <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-purple-700 via-blue-600 to-purple-900 dark:from-purple-900 dark:via-blue-900 dark:to-black flex flex-col items-center">
-        <h1 className="text-4xl font-extrabold text-neon-green mb-8 text-center drop-shadow-xl animate-pulse dark:text-green-400">Book Your Event</h1>
+      <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 dark:from-blue-900 dark:via-purple-900 dark:to-blue-900 flex flex-col items-center">
+        <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center drop-shadow animate-pulse dark:text-blue-200">Book Your Event</h1>
         <ProgressBar steps={steps} currentStep={currentStep} />
         <FormProvider {...methods}>
-          <form className="mt-8 w-full max-w-xl bg-gradient-to-br from-blue-900 via-purple-800 to-blue-700 dark:from-black dark:via-purple-900 dark:to-blue-900 rounded-2xl shadow-2xl p-6 sm:p-8 text-white border-4 border-neon-green dark:border-green-400" onSubmit={methods.handleSubmit(onSubmit)}>
+          <form className="mt-8 w-full max-w-xl bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 dark:from-blue-900 dark:via-purple-900 dark:to-blue-900 rounded-2xl shadow-lg p-6 sm:p-8 text-blue-700 border-4 border-blue-200 dark:border-blue-400" onSubmit={methods.handleSubmit(onSubmit)}>
             {currentStep === 0 && <FormStepEventDetails />}
             {currentStep === 1 && <FormStepEntertainment />}
             {currentStep === 2 && <FormStepTechnical />}
@@ -76,7 +76,7 @@ export default function BookPage() {
             <div className="flex justify-between mt-8">
               <button
                 type="button"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
                 onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
                 disabled={currentStep === 0}
               >
@@ -85,7 +85,7 @@ export default function BookPage() {
               {currentStep < steps.length - 1 ? (
                 <button
                   type="button"
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
                   onClick={handleNext}
                   disabled={currentStep === steps.length - 1}
                 >
@@ -94,7 +94,7 @@ export default function BookPage() {
               ) : (
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
                 >
                   Submit
                 </button>

@@ -45,9 +45,9 @@ export const FormStepEntertainment: React.FC = () => {
   const isMultipleBandsSelected = selected.includes("Multiple Live Bands");
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Entertainment Selection</h2>
+      <h2 className="text-xl font-bold mb-4 text-blue-700 drop-shadow animate-pulse dark:text-blue-200">Entertainment Selection</h2>
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Select Entertainment Type(s)</label>
+        <label className="block mb-1 font-medium text-blue-700 dark:text-blue-200">Select Entertainment Type(s)</label>
         <div className="grid grid-cols-1 gap-3">
           {/* Main options */}
           {mainOptions.map(opt => {
@@ -55,17 +55,17 @@ export const FormStepEntertainment: React.FC = () => {
             return (
               <label
                 key={opt.value}
-                className={`flex items-center gap-3 p-3 rounded border transition-colors duration-200 cursor-pointer ${isSelected ? "bg-neon-green/80 border-neon-green shadow-xl" : "bg-gray-900 dark:bg-black border-gray-800 dark:border-gray-900 opacity-40 grayscale"}`}
+                className={`flex items-center gap-3 p-3 rounded border transition-colors duration-200 cursor-pointer ${isSelected ? "bg-blue-100 border-blue-200 shadow-lg" : "bg-blue-50 dark:bg-black border-blue-100 dark:border-gray-900 opacity-40 grayscale"}`}
               >
                 <input
                   type="checkbox"
                   value={opt.value}
                   checked={isSelected}
                   onChange={() => handleMainChange(opt.value)}
-                  className="accent-neon-green"
+                  className="accent-blue-200"
                 />
-                <span className="font-semibold">{opt.label}</span>
-                <span className="text-xs text-gray-700 dark:text-gray-300">{opt.description}</span>
+                <span className="font-semibold text-blue-700 dark:text-blue-200">{opt.label}</span>
+                <span className="text-xs text-blue-400 dark:text-gray-300">{opt.description}</span>
               </label>
             );
           })}
@@ -77,18 +77,18 @@ export const FormStepEntertainment: React.FC = () => {
             return (
               <label
                 key={opt.value}
-                className={`flex items-center gap-3 p-3 rounded border transition-colors duration-200 cursor-pointer ${isSelected ? "bg-neon-green/80 border-neon-green shadow-xl" : "bg-gray-900 dark:bg-black border-gray-800 dark:border-gray-900 opacity-40 grayscale"} ${disableAddons ? "opacity-50 grayscale cursor-not-allowed" : ""}`}
+                className={`flex items-center gap-3 p-3 rounded border transition-colors duration-200 cursor-pointer ${isSelected ? "bg-blue-100 border-blue-200 shadow-lg" : "bg-blue-50 dark:bg-black border-blue-100 dark:border-gray-900 opacity-40 grayscale"} ${disableAddons ? "opacity-50 grayscale cursor-not-allowed" : ""}`}
               >
                 <input
                   type="checkbox"
                   value={opt.value}
                   checked={isSelected}
                   onChange={() => handleAddonChange(opt.value)}
-                  className="accent-neon-green"
+                  className="accent-blue-200"
                   disabled={disableAddons}
                 />
-                <span className="font-semibold">{opt.label}</span>
-                <span className="text-xs text-gray-700 dark:text-gray-300">{opt.description}</span>
+                <span className="font-semibold text-blue-700 dark:text-blue-200">{opt.label}</span>
+                <span className="text-xs text-blue-400 dark:text-gray-300">{opt.description}</span>
               </label>
             );
           })}
