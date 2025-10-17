@@ -19,9 +19,9 @@ export const FormStepEventDetails: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-extrabold mb-4 text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">Event Details</h2>
+      <h2 className="text-2xl font-extrabold mb-4 text-blue-700 drop-shadow animate-pulse dark:text-blue-200">Event Details</h2>
       <div className="mb-4">
-        <label className="block mb-1 font-bold text-white dark:text-green-400">Event Date</label>
+        <label className="block mb-1 font-bold text-blue-700 dark:text-green-400">Event Date</label>
         <input
           type="date"
           {...register("eventDate", {
@@ -38,20 +38,20 @@ export const FormStepEventDetails: React.FC = () => {
               ) || "Event date must be today or within 3 years from now.";
             }
           })}
-          className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400"
+          className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-blue-50 dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-blue-200 dark:focus:ring-green-400"
           min={new Date().toISOString().split('T')[0]}
           max={(() => { const d = new Date(); d.setFullYear(d.getFullYear() + 3); return d.toISOString().split('T')[0]; })()}
         />
         {errors.eventDate && <span className="text-red-500 text-sm">{typeof errors.eventDate.message === 'string' ? errors.eventDate.message : "Event date is required."}</span>}
       </div>
       <div className="mb-4">
-        <label className="block mb-1 font-bold text-white dark:text-green-400">Starting Time</label>
-        <input type="time" {...register("eventTime", { required: true })} className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400" />
+        <label className="block mb-1 font-bold text-blue-700 dark:text-green-400">Starting Time</label>
+        <input type="time" {...register("eventTime", { required: true })} className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-blue-50 dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-blue-200 dark:focus:ring-green-400" />
         {errors.eventTime && <span className="text-red-500 text-sm">Starting time is required.</span>}
       </div>
       <div className="mb-4">
-        <label className="block mb-1 font-bold text-white dark:text-green-400">Finish Time</label>
-        <input type="time" {...register("finishTime", { required: true })} className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400" />
+        <label className="block mb-1 font-bold text-blue-700 dark:text-green-400">Finish Time</label>
+        <input type="time" {...register("finishTime", { required: true })} className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-blue-50 dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-blue-200 dark:focus:ring-green-400" />
         {errors.finishTime && <span className="text-red-500 text-sm">Finish time is required.</span>}
         {isOvernight && (
           <span className="inline-flex items-center gap-2 px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-semibold text-sm border border-yellow-300">
@@ -61,8 +61,8 @@ export const FormStepEventDetails: React.FC = () => {
         )}
       </div>
       <div className="mb-4">
-        <label className="block mb-1 font-bold text-white dark:text-green-400">Guest Count</label>
-        <input type="number" {...register("guestCount", { required: true, min: 10, max: 1000 })} className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400" min={10} max={1000} />
+        <label className="block mb-1 font-bold text-blue-700 dark:text-green-400">Guest Count</label>
+        <input type="number" {...register("guestCount", { required: true, min: 10, max: 1000 })} className="w-full p-3 mb-2 border-none rounded-xl text-black dark:text-white bg-blue-50 dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-blue-200 dark:focus:ring-green-400" min={10} max={1000} />
         {errors.guestCount && <span className="text-red-500 text-sm">Guest count must be between 10 and 1000.</span>}
       </div>
     </div>
