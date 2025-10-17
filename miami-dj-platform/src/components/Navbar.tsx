@@ -42,25 +42,25 @@ export const Navbar: React.FC = () => {
       style={{ background: navBg }}
     >
       <div
-        className="w-full flex items-center justify-center gap-16 px-8 py-5"
+        className="w-full flex items-center justify-between gap-2 px-2 py-2 sm:gap-8 sm:px-4 md:gap-16 md:px-8 md:py-5"
         style={{ background: navBg }}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <Link href="/">
             <img
               src="/arove-logo.png"
               alt="Arove Logo"
-              className="h-12 w-auto block drop-shadow-[0_0_24px_rgba(165,180,252,0.7)] transition-all duration-300 hover:drop-shadow-[0_0_48px_rgba(165,180,252,1)]"
+              className="h-10 w-auto max-w-[120px] block drop-shadow-[0_0_24px_rgba(165,180,252,0.7)] transition-all duration-300 hover:drop-shadow-[0_0_48px_rgba(165,180,252,1)]"
               style={{ filter: 'drop-shadow(0 0 32px #a5b4fc) drop-shadow(0 0 16px #fff)', transition: 'filter 0.3s' }}
               onMouseEnter={e => e.currentTarget.style.filter = 'drop-shadow(0 0 64px #a5b4fc) drop-shadow(0 0 32px #fff)'}
               onMouseLeave={e => e.currentTarget.style.filter = 'drop-shadow(0 0 32px #a5b4fc) drop-shadow(0 0 16px #fff)'}
             />
           </Link>
-          <Link href="/" className="font-extrabold text-3xl text-white drop-shadow-xl animate-pulse">
+          <Link href="/" className="font-extrabold text-lg sm:text-2xl md:text-3xl text-white drop-shadow-xl animate-pulse truncate">
             Arove Entertainment
           </Link>
         </div>
-        <div className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-4 sm:gap-6">
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -71,7 +71,7 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
         </div>
-        <div className="flex items-center gap-2 relative">
+        <div className="flex items-center gap-1 sm:gap-2 relative">
           <ThemeToggle />
           <button
             aria-label="Cart"
