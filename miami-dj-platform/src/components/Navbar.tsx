@@ -9,7 +9,7 @@ const navItems = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
   { name: "Book Now", href: "/book" },
-  { name: "Contact", href: "/contact" },
+  { name: "Contact Us", href: "/contact" },
 ];
 
 export const Navbar: React.FC = () => {
