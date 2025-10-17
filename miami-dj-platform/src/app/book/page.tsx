@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ProgressBar } from "../../components/ProgressBar";
 import { FormStepEventDetails } from "../../components/FormStepEventDetails";
 import { FormStepEntertainment } from "../../components/FormStepEntertainment";
 import { FormStepTechnical } from "../../components/FormStepTechnical";
 import { FormStepClientInfo } from "../../components/FormStepClientInfo";
 import { useForm, FormProvider } from "react-hook-form";
+import { useCart } from "../../lib/contexts/CartContext";
 import { useRouter } from "next/navigation";
 
 export default function BookPage() {
@@ -13,11 +14,40 @@ export default function BookPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const methods = useForm({ mode: "onTouched" });
   const router = useRouter();
+  const { addItem, updateItem } = useCart();
+
+  // Only update cart when user navigates steps, and only with relevant step data
+  const stepFields: Record<string, string[]> = {
+    "Event Details": ["eventDate", "eventTime", "finishTime"],
+    "Entertainment": ["entertainmentType", "artist", "specialRequests"],
+    "Technical": ["lighting", "audioSetup", "otherTechnical"],
+    "Client Info": ["clientName", "clientEmail", "clientPhone", "clientNotes"],
+  };
+
+  const updateCartStep = () => {
+    const stepName = steps[currentStep];
+    const allValues = methods.getValues();
+    const fields = stepFields[stepName] || [];
+    const stepData: Record<string, any> = {};
+    fields.forEach((field) => {
+      if (allValues[field] !== undefined) stepData[field] = allValues[field];
+    });
+    addItem({ step: stepName, data: stepData });
+  };
 
   const handleNext = async () => {
     const valid = await methods.trigger();
-    if (valid) setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
+    if (valid) {
+      updateCartStep();
+      setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
+    }
   };
+
+  const handlePrevious = () => {
+    updateCartStep();
+    setCurrentStep((s) => Math.max(0, s - 1));
+  };
+
 
   const onSubmit = async (data: any) => {
     const res = await fetch("/api/bookings", {
@@ -34,19 +64,19 @@ export default function BookPage() {
 
   return (
     <>
-      <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-white dark:bg-black flex flex-col items-center">
-        <h1 className="text-3xl font-bold text-black dark:text-white mb-8 text-center">Book Your Event</h1>
+      <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-purple-700 via-blue-600 to-purple-900 dark:from-purple-900 dark:via-blue-900 dark:to-black flex flex-col items-center">
+        <h1 className="text-4xl font-extrabold text-neon-green mb-8 text-center drop-shadow-xl animate-pulse dark:text-green-400">Book Your Event</h1>
         <ProgressBar steps={steps} currentStep={currentStep} />
         <FormProvider {...methods}>
-          <form className="mt-8 w-full max-w-xl bg-white dark:bg-gray-900 rounded-lg shadow p-4 sm:p-6 text-black dark:text-white" onSubmit={methods.handleSubmit(onSubmit)}>
+          <form className="mt-8 w-full max-w-xl bg-gradient-to-br from-blue-900 via-purple-800 to-blue-700 dark:from-black dark:via-purple-900 dark:to-blue-900 rounded-2xl shadow-2xl p-6 sm:p-8 text-white border-4 border-neon-green dark:border-green-400" onSubmit={methods.handleSubmit(onSubmit)}>
             {currentStep === 0 && <FormStepEventDetails />}
             {currentStep === 1 && <FormStepEntertainment />}
             {currentStep === 2 && <FormStepTechnical />}
             {currentStep === 3 && <FormStepClientInfo />}
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between mt-8">
               <button
                 type="button"
-                className="px-4 py-2 rounded bg-gray-700 text-white font-semibold text-sm hover:bg-gray-500 transition-colors"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400"
                 onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
                 disabled={currentStep === 0}
               >
@@ -55,7 +85,7 @@ export default function BookPage() {
               {currentStep < steps.length - 1 ? (
                 <button
                   type="button"
-                  className="px-4 py-2 rounded bg-gray-700 text-white font-semibold text-sm hover:bg-gray-500 transition-colors"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400"
                   onClick={handleNext}
                   disabled={currentStep === steps.length - 1}
                 >
@@ -64,7 +94,7 @@ export default function BookPage() {
               ) : (
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-gray-700 text-white font-semibold text-sm hover:bg-gray-500 transition-colors"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400"
                 >
                   Submit
                 </button>
