@@ -25,15 +25,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
-      <form onSubmit={handleLogin} className="bg-white dark:bg-gray-900 p-8 rounded shadow max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-blue-600 to-purple-900 dark:from-purple-900 dark:via-blue-900 dark:to-black">
+      <form onSubmit={handleLogin} className="bg-gradient-to-br from-blue-900 via-purple-800 to-blue-700 dark:from-black dark:via-purple-900 dark:to-blue-900 p-8 rounded-2xl shadow-2xl max-w-md w-full border-4 border-neon-green dark:border-green-400">
+        <h1 className="text-3xl font-extrabold mb-6 text-center text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">Login</h1>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-3 mb-4 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400"
           required
         />
         <input
@@ -41,11 +41,11 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-3 mb-4 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400"
           required
         />
-        <button type="submit" className="w-full bg-teal text-white py-2 rounded font-semibold">Login</button>
-        {message && <p className="mt-4 text-center text-coral">{message}</p>}
+        <button type="submit" className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green via-blue-400 to-purple-500 text-black font-bold text-base shadow-xl hover:scale-110 hover:from-purple-500 hover:to-neon-green transition-all duration-300 focus:ring-4 focus:ring-neon-green dark:bg-gradient-to-r dark:from-green-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-green-400">Login</button>
+        {message && <p className="mt-4 text-center text-neon-green dark:text-green-400">{message}</p>}
       </form>
     </div>
   );

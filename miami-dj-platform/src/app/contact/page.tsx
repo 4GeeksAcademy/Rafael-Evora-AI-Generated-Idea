@@ -29,7 +29,7 @@ export default function ContactPage() {
           <input type="text" placeholder="Your Name" className="p-2 border rounded w-full text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500" required />
           <input type="email" placeholder="Your Email" className="p-2 border rounded w-full text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500" required />
           <textarea placeholder="Your Message" className="p-2 border rounded w-full text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500" rows={4} required />
-          <button type="submit" className="bg-gray-700 text-white font-semibold text-sm px-4 py-2 rounded hover:bg-gray-500 transition-colors w-full">Send Message</button>
+          <button type="submit" className="bg-gray-700 text-white font-semibold text-sm px-4 py-2 rounded hover:bg-coral transition-colors duration-300 w-full">Send Message</button>
         </form>
       </div>
     </div>
