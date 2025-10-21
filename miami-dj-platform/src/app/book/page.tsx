@@ -19,8 +19,8 @@ export default function BookPage() {
   // Only update cart when user navigates steps, and only with relevant step data
   const stepFields: Record<string, string[]> = {
     "Event Details": ["eventDate", "eventTime", "finishTime"],
-    "Entertainment": ["entertainmentType", "artist", "specialRequests"],
-    "Technical": ["lighting", "audioSetup", "otherTechnical"],
+    Entertainment: ["entertainmentType", "artist", "specialRequests"],
+    Technical: ["lighting", "audioSetup", "otherTechnical"],
     "Client Info": ["clientName", "clientEmail", "clientPhone", "clientNotes"],
   };
 
@@ -48,7 +48,6 @@ export default function BookPage() {
     setCurrentStep((s) => Math.max(0, s - 1));
   };
 
-
   const onSubmit = async (data: any) => {
     const res = await fetch("/api/bookings", {
       method: "POST",
@@ -65,10 +64,15 @@ export default function BookPage() {
   return (
     <>
       <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 dark:from-blue-900 dark:via-purple-900 dark:to-blue-900 flex flex-col items-center">
-        <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center drop-shadow animate-pulse dark:text-blue-200">Book Your Event</h1>
+        <h1 className="text-4xl font-extrabold text-blue-700 mb-8 text-center drop-shadow animate-pulse dark:text-blue-200">
+          Request a Booking for you event
+        </h1>
         <ProgressBar steps={steps} currentStep={currentStep} />
         <FormProvider {...methods}>
-          <form className="mt-8 w-full max-w-xl bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 dark:from-blue-900 dark:via-purple-900 dark:to-blue-900 rounded-2xl shadow-lg p-6 sm:p-8 text-blue-700 border-4 border-blue-200 dark:border-blue-400" onSubmit={methods.handleSubmit(onSubmit)}>
+          <form
+            className="mt-8 w-full max-w-xl bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 dark:from-blue-900 dark:via-purple-900 dark:to-blue-900 rounded-2xl shadow-lg p-6 sm:p-8 text-blue-700 border-4 border-blue-200 dark:border-blue-400"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
             {currentStep === 0 && <FormStepEventDetails />}
             {currentStep === 1 && <FormStepEntertainment />}
             {currentStep === 2 && <FormStepTechnical />}

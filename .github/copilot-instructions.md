@@ -16,4 +16,4 @@ Whenever you begin to implement a feature, refer to the memory-bank and all file
 
 Whenever working with an external api, refer to the external-documentation file within the memory-bank for context.
 
-When editing styles, there is a "dark" mode and "light" mode for styling. If I refer to a single mode (either "light" or "dark") I only want you to edit the specified mode.
+When editing styles, there is a "dark" mode and "light" mode for styling. If I refer to a single mode (either "light" or "dark") followed up by: ":" I only want you to edit the specified mode.

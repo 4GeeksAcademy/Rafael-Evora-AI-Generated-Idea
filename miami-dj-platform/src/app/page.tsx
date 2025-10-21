@@ -6,7 +6,7 @@ import { useSupabaseUser } from "../lib/useSupabaseUser";
 export default function Home() {
   const user = useSupabaseUser();
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-start text-center bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-700 dark:via-blue-900 dark:to-black relative overflow-hidden">
+    <div className="min-h-screen w-full flex flex-col items-center justify-start text-center bg-gradient-to-br from-blue-100/40 via-gray-200/30 to-blue-200/40 dark:from-blue-900/40 dark:via-slate-800/30 dark:to-gray-900/40 relative overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -15,10 +15,10 @@ export default function Home() {
         playsInline
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
         // Replace src with your video file in /public or a URL
-        src="/DJ-Set-Sept-2024-AROVE-ENTERTAINMENT.mp4"
+        src="/AROVE-Webpage-LandingPage-Video.mov"
       />
       {/* Overlay for readability */}
-      <div className="fixed inset-0 w-full h-full bg-gradient-to-br from-blue-100/70 via-blue-200/60 to-blue-300/70 dark:from-blue-900/80 dark:via-indigo-900/70 dark:to-black/80 z-0 pointer-events-none" />
+      <div className="fixed inset-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-gray-100/15 to-blue-200/20 dark:from-blue-900/30 dark:via-slate-800/20 dark:to-gray-900/30 z-0 pointer-events-none" />
       <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center py-16 px-4 overflow-hidden z-10">
         <div className="relative z-10 w-full flex flex-col items-center justify-center">
           {user && (
