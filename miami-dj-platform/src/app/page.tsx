@@ -22,7 +22,7 @@ export default function Home() {
       <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center py-16 px-4 overflow-hidden z-10">
         <div className="relative z-10 w-full flex flex-col items-center justify-center">
           {user && (
-            <div className="mb-4 text-lg font-bold text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">
+            <div className="mb-4 text-lg font-bold text-neon-green drop-shadow-xl dark:text-green-400">
               Welcome, {user.email}!
             </div>
           )}
@@ -34,7 +34,7 @@ export default function Home() {
               backdropFilter: "blur(8px)",
             }}
           >
-            <h1 className="text-5xl font-extrabold text-white drop-shadow-xl animate-pulse">
+            <h1 className="text-5xl font-extrabold text-white drop-shadow-xl">
               Miami DJ & Live Music Entertainment
             </h1>
           </div>
@@ -79,7 +79,7 @@ export default function Home() {
         </div>
       </section>
       <section className="py-12 px-4">
-        <h2 className="text-3xl font-extrabold text-blue-700 drop-shadow-xl animate-pulse mb-8 text-center dark:text-blue-300">
+        <h2 className="text-3xl font-extrabold text-blue-700 drop-shadow-xl mb-8 text-center dark:text-blue-300">
           Featured Services
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -133,7 +133,14 @@ export default function Home() {
           </a>
         </div>
       </section>
-      <section className="w-[70%] mx-auto py-6 px-4 text-center rounded-t-3xl shadow-lg border-0" style={{background: 'radial-gradient(circle, rgba(30,58,138,0.85) 70%, rgba(30,58,138,0.0) 100%)', backdropFilter: 'blur(8px)'}}>
+      <section
+        className="w-[70%] mx-auto py-6 px-4 text-center rounded-t-3xl shadow-lg border-0"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(30,58,138,0.85) 70%, rgba(30,58,138,0.0) 100%)",
+          backdropFilter: "blur(8px)",
+        }}
+      >
         <h2 className="text-2xl font-extrabold text-white drop-shadow-2xl mb-4">
           Ready to party?
         </h2>
@@ -143,7 +150,11 @@ export default function Home() {
         <a
           href="/contact"
           className="px-6 py-3 h-12 rounded-xl shadow-2xl border-0 text-white font-bold text-lg"
-          style={{background: 'radial-gradient(circle, rgba(30,58,138,0.85) 70%, rgba(30,58,138,0.0) 100%)', backdropFilter: 'blur(6px)'}}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(30,58,138,0.85) 70%, rgba(30,58,138,0.0) 100%)",
+            backdropFilter: "blur(6px)",
+          }}
         >
           <span className="transition-all duration-200 hover:font-extrabold">
             Contact Us
