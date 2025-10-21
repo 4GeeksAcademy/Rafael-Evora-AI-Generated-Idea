@@ -7,6 +7,8 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -16,13 +18,22 @@ export default function SignupPage() {
       setMessage("Passwords do not match.");
       return;
     }
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
     if (error) {
       setMessage(error.message);
     } else {
+      // Insert name and surname into users table if signup is successful
+      if (data.user) {
+        await supabase.from("users").insert({
+          id: data.user.id,
+          email,
+          name,
+          surname
+        });
+      }
       setMessage("Signup successful! Please check your email to confirm your account.");
     }
   };
@@ -31,6 +42,22 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-blue-600 to-purple-900 dark:from-purple-900 dark:via-blue-900 dark:to-black">
       <form onSubmit={handleSignup} className="bg-gradient-to-br from-blue-900 via-purple-800 to-blue-700 dark:from-black dark:via-purple-900 dark:to-blue-900 p-8 rounded-2xl shadow-2xl max-w-md w-full border-4 border-neon-green dark:border-green-400">
         <h1 className="text-3xl font-extrabold mb-6 text-center text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">Sign Up</h1>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          className="w-full p-3 mb-4 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Surname"
+          value={surname}
+          onChange={e => setSurname(e.target.value)}
+          className="w-full p-3 mb-4 border-none rounded-xl text-black dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 shadow focus:ring-4 focus:ring-neon-green dark:focus:ring-green-400"
+          required
+        />
         <input
           type="email"
           placeholder="Email"
