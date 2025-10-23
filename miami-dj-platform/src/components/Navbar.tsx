@@ -43,20 +43,40 @@ export const Navbar: React.FC = () => {
       setProfileName(null);
       return;
     }
-    fetch(`/api/user/profile?user_id=${encodeURIComponent(user.id)}`)
-      .then(async (res) => {
-        if (!res.ok) return null;
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/user/profile?user_id=${encodeURIComponent(user.id)}`
+        );
+        if (!res.ok) {
+          console.error(
+            "Navbar: Failed to fetch profile",
+            res.status,
+            res.statusText
+          );
+          setProfileName(null);
+          return;
+        }
         const text = await res.text();
-        if (!text) return null;
+        if (!text) {
+          setProfileName(null);
+          return;
+        }
+        let name = null;
         try {
           const data = JSON.parse(text);
           if (data && data.user && (data.user.name || data.user.surname)) {
-            return `${data.user.name || ""} ${data.user.surname || ""}`.trim();
+            name = `${data.user.name || ""} ${data.user.surname || ""}`.trim();
           }
-        } catch {}
-        return null;
-      })
-      .then((name) => setProfileName(name));
+        } catch (err) {
+          console.error("Navbar: Error parsing profile JSON", err);
+        }
+        setProfileName(name);
+      } catch (err) {
+        console.error("Navbar: Fetch error", err);
+        setProfileName(null);
+      }
+    })();
   }, [user]);
 
   const navBg = isDark

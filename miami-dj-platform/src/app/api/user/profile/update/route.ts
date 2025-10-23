@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
@@ -11,6 +12,28 @@ export async function POST(request: Request) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
+  // If only user_id is provided, fetch and return profile and addresses
+  if (!name && !surname && !addresses) {
+    // Fetch user profile
+    const { data: profile, error: profileError } = await supabase
+      .from("users")
+      .select("id, email, name, surname")
+      .eq("id", user_id)
+      .single();
+    if (profileError) return NextResponse.json({ error: profileError.message }, { status: 500 });
+
+    // Fetch addresses via join table
+    const { data: addressesData, error: addressesError } = await supabase
+      .from("user_addresses")
+      .select("address:addresses(id, label, address, zip_code, state)")
+      .eq("user_id", user_id);
+    if (addressesError) return NextResponse.json({ error: addressesError.message }, { status: 500 });
+
+    // Flatten the addresses array
+    const addressesList = (addressesData || []).map((row: any) => row.address);
+    return NextResponse.json({ profile, addresses: addressesList });
+  }
+
   // Update user profile
   const { error: userError } = await supabase
     .from("users")
@@ -20,15 +43,37 @@ export async function POST(request: Request) {
 
   // Update addresses (replace all for simplicity)
   if (Array.isArray(addresses)) {
-    // Delete old addresses
-    await supabase.from("addresses").delete().eq("user_id", user_id);
-    // Insert new addresses
+    // Remove all user-address links for this user
+    await supabase.from("user_addresses").delete().eq("user_id", user_id);
+
     for (const addr of addresses) {
-      await supabase.from("addresses").insert({
-        user_id,
-        label: addr.label,
-        address: addr.address,
-      });
+      let addressId = addr.id;
+      // If address has no id, create it
+      if (!addressId) {
+        const { data: newAddrArr, error: insertError } = await supabase
+          .from("addresses")
+          .insert({
+            label: addr.label,
+            address: addr.address,
+            zip_code: addr.zip_code || null,
+            state: addr.state || null,
+          })
+          .select("*");
+        if (insertError) continue;
+        addressId = newAddrArr && Array.isArray(newAddrArr) ? newAddrArr[0]?.id : undefined;
+      } else {
+        // Update address details if needed
+        await supabase.from("addresses").update({
+          label: addr.label,
+          address: addr.address,
+          zip_code: addr.zip_code || null,
+          state: addr.state || null,
+        }).eq("id", addressId);
+      }
+      // Link user and address in join table
+      if (addressId) {
+        await supabase.from("user_addresses").insert({ user_id, address_id: addressId });
+      }
     }
   }
 
