@@ -48,6 +48,11 @@ export const Navbar: React.FC = () => {
         const res = await fetch(
           `/api/user/profile?user_id=${encodeURIComponent(user.id)}`
         );
+        if (res.status === 404) {
+          // Fallback for admin or missing user
+          setProfileName(user.email || "Admin");
+          return;
+        }
         if (!res.ok) {
           console.error(
             "Navbar: Failed to fetch profile",
@@ -80,8 +85,8 @@ export const Navbar: React.FC = () => {
   }, [user]);
 
   const navBg = isDark
-    ? "linear-gradient(90deg, #1e293b 0%, #312e81 40%, #1e293b 100%)"
-    : "linear-gradient(90deg, #c7d2fe 0%, #a5b4fc 40%, #c7d2fe 100%)";
+    ? "linear-gradient(90deg, rgba(30,41,59,0.70) 0%, rgba(49,46,129,0.85) 40%, rgba(30,41,59,0.85) 100%)"
+    : "linear-gradient(90deg, rgba(199,210,254,0.70) 0%, rgba(165,180,252,0.85) 40%, rgba(199,210,254,0.85) 100%)";
   const [menuOpen, setMenuOpen] = React.useState(false);
   return (
     <nav

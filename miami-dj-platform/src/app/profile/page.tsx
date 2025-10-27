@@ -1,3 +1,7 @@
+// Add read-only display for technical_preferences from bookings
+// ...existing code...
+// Add read-only display for technical_preferences from booking_request
+// ...existing code...
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useSupabaseUser } from "../../lib/useSupabaseUser";
@@ -31,28 +35,36 @@ export default function ProfilePage() {
   const [deleting, setDeleting] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
 
-  // Fetch profile and bookings
+  // Fetch profile, bookings, and booking_requests
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    const bookingUrl = user.id
-      ? "/api/bookings?user_id=" + encodeURIComponent(user.id)
-      : user.email
-      ? "/api/bookings?email=" + encodeURIComponent(user.email)
-      : null;
+    const email = typeof user.email === "string" ? user.email : "";
     Promise.all([
-      bookingUrl
-        ? fetch(bookingUrl).then(async (res) => {
-            if (!res.ok) return { bookings: [] };
-            const text = await res.text();
-            if (!text) return { bookings: [] };
-            try {
-              return JSON.parse(text);
-            } catch {
-              return { bookings: [] };
-            }
-          })
-        : Promise.resolve({ bookings: [] }),
+      fetch(`/api/bookings?email=${encodeURIComponent(email)}`).then(
+        async (res) => {
+          if (!res.ok) return { bookings: [] };
+          const text = await res.text();
+          if (!text) return { bookings: [] };
+          try {
+            return JSON.parse(text);
+          } catch {
+            return { bookings: [] };
+          }
+        }
+      ),
+      fetch(`/api/booking_request?email=${encodeURIComponent(email)}`).then(
+        async (res) => {
+          if (!res.ok) return { booking_requests: [] };
+          const text = await res.text();
+          if (!text) return { booking_requests: [] };
+          try {
+            return JSON.parse(text);
+          } catch {
+            return { booking_requests: [] };
+          }
+        }
+      ),
       fetch("/api/user/profile/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,8 +75,13 @@ export default function ProfilePage() {
         return data;
       }),
     ])
-      .then(([bookingData, profileData]) => {
-        setBookings(bookingData.bookings || []);
+      .then(([bookingData, bookingRequestData, profileData]) => {
+        // Merge bookings and booking_requests
+        const allBookings = [
+          ...(bookingData.bookings || []),
+          ...(bookingRequestData.booking_requests || []),
+        ];
+        setBookings(allBookings);
         setProfile(profileData.profile || null);
         setAddresses(profileData.addresses || []);
         initialProfile.current = profileData.profile || null;

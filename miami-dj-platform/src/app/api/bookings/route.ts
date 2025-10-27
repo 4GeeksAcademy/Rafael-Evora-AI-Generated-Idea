@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   );
 
   // Destructure and validate required fields
-  const { user_id, address_id, address, event_name, date, notes, client_email, client_name, client_phone } = body;
+  const { user_id, address_id, address, event_name, date, notes, client_email, client_name, client_phone, audio, lighting } = body;
   if (!event_name || !date) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
@@ -51,6 +51,8 @@ export async function POST(request: Request) {
     client_email: client_email || null,
     client_name: client_name || null,
     client_phone: client_phone || null,
+    audio: audio || null,
+    lighting: lighting || null,
     status: "Pending"
   };
   const { data, error } = await supabase.from("bookings").insert([

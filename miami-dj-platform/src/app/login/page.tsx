@@ -20,16 +20,33 @@ export default function LoginPage() {
       password,
     });
     if (error) {
-      setMessage(
-        error.message === "Invalid login credentials"
-          ? "Incorrect email or password. Please try again."
-          : error.message
-      );
-      setIsError(true);
+      if (error.message === "Email not confirmed") {
+        setMessage("Email not confirmed");
+        setIsError(true);
+      } else {
+        setMessage(
+          error.message === "Invalid login credentials"
+            ? "Incorrect email or password. Please try again."
+            : error.message
+        );
+        setIsError(true);
+      }
     } else {
       setMessage("Login successful! Redirecting...");
       setIsError(false);
       setTimeout(() => router.push("/"), 1000);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setMessage("");
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    if (error) {
+      setMessage("Failed to resend confirmation email: " + error.message);
+      setIsError(true);
+    } else {
+      setMessage("Confirmation email resent! Please check your inbox.");
+      setIsError(false);
     }
   };
 
@@ -65,16 +82,35 @@ export default function LoginPage() {
           Login
         </button>
         {message && (
-          <p
-            className={`mt-4 text-center font-bold ${
-              isError
-                ? "text-red-500 dark:text-red-400"
-                : "text-green-500 dark:text-green-400"
-            }`}
-          >
-            {message}
-          </p>
+          <>
+            <p
+              className={`mt-4 text-center font-bold ${
+                isError
+                  ? "text-red-500 dark:text-red-400"
+                  : "text-green-500 dark:text-green-400"
+              }`}
+            >
+              {message}
+            </p>
+            {message === "Email not confirmed" && (
+              <button
+                type="button"
+                className="mt-2 w-full px-6 py-2 rounded-xl bg-gradient-to-r from-red-400 via-blue-400 to-purple-500 text-white font-bold text-base shadow-xl hover:scale-105 transition-all duration-300 focus:ring-4 focus:ring-red-400 dark:bg-gradient-to-r dark:from-red-400 dark:via-blue-900 dark:to-purple-900 dark:text-white dark:focus:ring-red-400"
+                onClick={handleResendConfirmation}
+              >
+                Resend Confirmation Email
+              </button>
+            )}
+          </>
         )}
+        <div className="mt-6 text-center">
+          <a
+            href="/admin-login"
+            className="text-green-400 hover:underline font-semibold"
+          >
+            Admin Login
+          </a>
+        </div>
       </form>
     </div>
   );

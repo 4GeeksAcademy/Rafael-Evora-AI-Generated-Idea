@@ -141,9 +141,8 @@ export default function BookPage() {
           end_time: endTime,
           overnight: startTime > endTime,
           entertainment_section: entertainment.join(", "),
-          technical_preferences: `Lighting: ${lighting || ""}, Audio: ${
-            audio || ""
-          }`,
+          audio: audio || "",
+          lighting: lighting || "",
           address: address,
           state: state,
           zip: zip,
