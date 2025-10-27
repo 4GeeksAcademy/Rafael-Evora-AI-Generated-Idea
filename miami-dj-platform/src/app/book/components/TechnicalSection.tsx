@@ -16,13 +16,15 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
   setAudio,
 }) => (
   <div className="mb-8">
-    <h2 className="text-2xl font-bold mb-6 text-blue-700">
+    <h2 className="text-2xl font-extrabold mb-6 text-blue-700 dark:text-white">
       Technical Preferences{event_name ? ` for ${event_name}` : ""}
     </h2>
     <div className="mb-6">
-      <div className="font-bold text-blue-700 mb-2">Lighting & Smoke Show</div>
+      <div className="font-extrabold text-blue-700 dark:text-white mb-2">
+        Lighting & Smoke Show
+      </div>
       <div className="space-y-4">
-        <label className="flex items-center bg-blue-50/80 rounded-xl p-4 shadow-md cursor-pointer">
+        <label className="flex items-center bg-blue-50/80 dark:bg-blue-900/80 rounded-xl p-4 shadow-md cursor-pointer">
           <input
             type="radio"
             name="lighting"
@@ -30,12 +32,14 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
             checked={lighting === "yes"}
             onChange={() => setLighting("yes")}
           />
-          <span className="font-bold mr-2">Yes</span>
-          <span className="text-gray-500">
+          <span className="font-extrabold mr-2 text-blue-900 dark:text-white">
+            Yes
+          </span>
+          <span className="text-white dark:text-white">
             Includes lighting effects and smoke show for a dramatic atmosphere.
           </span>
         </label>
-        <label className="flex items-center bg-blue-50/80 rounded-xl p-4 shadow-md cursor-pointer">
+        <label className="flex items-center bg-blue-50/80 dark:bg-blue-900/40 rounded-xl p-4 shadow-md cursor-pointer">
           <input
             type="radio"
             name="lighting"
@@ -43,17 +47,21 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
             checked={lighting === "no"}
             onChange={() => setLighting("no")}
           />
-          <span className="font-bold mr-2">No</span>
-          <span className="text-gray-500">
+          <span className="font-bold mr-2 text-blue-900 dark:text-white">
+            No
+          </span>
+          <span className="text-gray-500 dark:text-white">
             No additional lighting or smoke effects, standard setup only.
           </span>
         </label>
       </div>
     </div>
     <div>
-      <div className="font-bold text-blue-700 mb-2">Audio Setup</div>
+      <div className="font-extrabold text-blue-700 dark:text-white mb-2">
+        Audio Setup
+      </div>
       <div className="space-y-4">
-        <label className="flex items-center bg-blue-50/80 rounded-xl p-4 shadow-md cursor-pointer">
+        <label className="flex items-center bg-blue-50/80 dark:bg-blue-900/80 rounded-xl p-4 shadow-md cursor-pointer">
           <input
             type="radio"
             name="audio"
@@ -61,12 +69,14 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
             checked={audio === "direct"}
             onChange={() => setAudio("direct")}
           />
-          <span className="font-bold mr-2">Direct/Party</span>
-          <span className="text-gray-500">
+          <span className="font-extrabold mr-2 text-blue-900 dark:text-white">
+            Direct/Party
+          </span>
+          <span className="text-white dark:text-white">
             Loud, energetic, best for dancing and parties.
           </span>
         </label>
-        <label className="flex items-center bg-blue-50/80 rounded-xl p-4 shadow-md cursor-pointer">
+        <label className="flex items-center bg-blue-50/80 dark:bg-blue-900/40 rounded-xl p-4 shadow-md cursor-pointer">
           <input
             type="radio"
             name="audio"
@@ -74,12 +84,14 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
             checked={audio === "indirect"}
             onChange={() => setAudio("indirect")}
           />
-          <span className="font-bold mr-2">Indirect/Ambient</span>
-          <span className="text-gray-500">
+          <span className="font-bold mr-2 text-blue-900 dark:text-white">
+            Indirect/Ambient
+          </span>
+          <span className="text-gray-500 dark:text-white">
             Soft, background music, ideal for mingling.
           </span>
         </label>
-        <label className="flex items-center bg-blue-50/80 rounded-xl p-4 shadow-md cursor-pointer">
+        <label className="flex items-center bg-blue-50/80 dark:bg-blue-900/40 rounded-xl p-4 shadow-md cursor-pointer">
           <input
             type="radio"
             name="audio"
@@ -87,12 +99,14 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
             checked={audio === "combination"}
             onChange={() => setAudio("combination")}
           />
-          <span className="font-bold mr-2">Combination</span>
-          <span className="text-gray-500">
+          <span className="font-bold mr-2 text-blue-900 dark:text-white">
+            Combination
+          </span>
+          <span className="text-gray-500 dark:text-white">
             Mix of party and ambient, flexible for all events.
           </span>
         </label>
-        <label className="flex items-center bg-blue-50/80 rounded-xl p-4 shadow-md cursor-pointer">
+        <label className="flex items-center bg-blue-50/80 dark:bg-blue-900/40 rounded-xl p-4 shadow-md cursor-pointer">
           <input
             type="radio"
             name="audio"
@@ -100,8 +114,10 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
             checked={audio === undefined}
             onChange={() => setAudio(undefined)}
           />
-          <span className="font-bold mr-2">No Audio</span>
-          <span className="text-gray-500">
+          <span className="font-bold mr-2 text-blue-900 dark:text-white">
+            No Audio
+          </span>
+          <span className="text-gray-500 dark:text-white">
             No audio setup required for this event.
           </span>
         </label>

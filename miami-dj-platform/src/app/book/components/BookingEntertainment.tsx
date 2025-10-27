@@ -57,10 +57,12 @@ export const BookingEntertainment: React.FC<{
   };
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">
+      <h2 className="text-2xl font-bold mb-4 text-blue-200 dark:text-blue-100">
         Entertainment Selection{eventName ? ` for ${eventName}` : ""}
       </h2>
-      <p className="mb-4 text-blue-700">Select Entertainment Type(s)</p>
+      <p className="mb-4 text-blue-300 dark:text-blue-200">
+        Select Entertainment Type(s)
+      </p>
       <div className="flex flex-col gap-3">
         {ENTERTAINMENT_OPTIONS.map((opt) => (
           <label
@@ -73,10 +75,10 @@ export const BookingEntertainment: React.FC<{
               checked={value.includes(opt.key)}
               onChange={() => handleToggle(opt.key)}
             />
-            <span className="font-semibold text-lg text-blue-900 dark:text-blue-200 mr-2">
+            <span className="font-semibold text-lg text-blue-900 dark:text-blue-100 mr-2">
               {opt.label}
             </span>
-            <span className="text-blue-500 dark:text-blue-300 text-base">
+            <span className="text-blue-500 dark:text-blue-200 text-base">
               {opt.description}
             </span>
           </label>

@@ -20,6 +20,7 @@ export const BookingEventDetails: React.FC<{
       type="date"
       className="w-full p-2 border rounded"
       value={date}
+      min={new Date().toISOString().split("T")[0]}
       onChange={(e) => onDateChange(e.target.value)}
     />
   </div>

@@ -42,12 +42,14 @@ export const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
   setZip,
 }) => (
   <div className="mb-8">
-    <h2 className="text-3xl font-bold mb-6 text-blue-700">
+    <h2 className="text-3xl font-bold mb-6 text-blue-400 dark:text-blue-100">
       Client Information
     </h2>
     <>
       <div className="mb-6">
-        <label className="block font-bold mb-2 text-blue-700">Full Name</label>
+        <label className="block font-bold mb-2 text-blue-700 dark:text-blue-100">
+          Full Name
+        </label>
         <input
           type="text"
           className={`w-full rounded-xl bg-blue-50/80 border-2 ${
@@ -61,7 +63,9 @@ export const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
         )}
       </div>
       <div className="mb-6">
-        <label className="block font-bold mb-2 text-blue-700">Email</label>
+        <label className="block font-bold mb-2 text-blue-700 dark:text-blue-100">
+          Email
+        </label>
         <input
           type="email"
           className={`w-full rounded-xl bg-blue-50/80 border-2 ${
@@ -75,7 +79,7 @@ export const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
         )}
       </div>
       <div className="mb-6">
-        <label className="block font-bold mb-2 text-blue-700">
+        <label className="block font-bold mb-2 text-blue-700 dark:text-blue-100">
           Phone Number
         </label>
         <input
@@ -93,7 +97,7 @@ export const ClientInfoSection: React.FC<ClientInfoSectionProps> = ({
         )}
       </div>
       <div className="mb-6">
-        <label className="block font-bold mb-2 text-blue-700">
+        <label className="block font-bold mb-2 text-blue-700 dark:text-blue-100">
           Event Address
         </label>
         <input

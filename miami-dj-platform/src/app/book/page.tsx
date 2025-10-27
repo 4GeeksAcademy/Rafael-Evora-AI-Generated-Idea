@@ -48,6 +48,7 @@ export default function BookPage() {
   const [clientNameError, setClientNameError] = useState(false);
   const [clientEmailError, setClientEmailError] = useState(false);
   const [clientPhoneError, setClientPhoneError] = useState(false);
+  const [stepError, setStepError] = useState<string>("");
 
   // Validation helpers
   const validateEmail = (email: string) => /.+@.+\..+/.test(email);
@@ -99,23 +100,59 @@ export default function BookPage() {
     console.log("clientEmail", clientEmail);
     console.log("clientPhone", clientPhone);
     console.log("canNext()", canNext());
+    setStepError("");
+    if (currentStep === 0) {
+      if (!date) {
+        setStepError("Please select an event date.");
+        return;
+      }
+      if (!startTime) {
+        setStepError("Please select a start time.");
+        return;
+      }
+      if (!endTime) {
+        setStepError("Please select an end time.");
+        return;
+      }
+      if (startTime >= endTime) {
+        setStepError("End time must be after start time.");
+        return;
+      }
+    }
+    if (currentStep === 1 && entertainment.length === 0) {
+      setStepError("Please select at least one entertainment option.");
+      return;
+    }
+    if (currentStep === 2 && (!lighting || !audio)) {
+      setStepError("Please select lighting and audio preferences.");
+      return;
+    }
     if (currentStep === 3 && !userLoggedIn) {
       setClientNameError(clientName.trim().length === 0);
       setClientEmailError(!validateEmail(clientEmail));
       setClientPhoneError(!validatePhone(clientPhone));
-      if (!canNext()) {
-        console.log("Validation failed in handleNext");
+      if (!clientName.trim()) {
+        setStepError("Please enter your name.");
+        return;
+      }
+      if (!validateEmail(clientEmail)) {
+        setStepError("Please enter a valid email address.");
+        return;
+      }
+      if (!validatePhone(clientPhone)) {
+        setStepError("Please enter a valid phone number.");
+        return;
+      }
+      if (!address.trim()) {
+        setStepError("Please enter your event address.");
         return;
       }
     }
-    if (canNext()) {
-      console.log("Advancing step");
-      // Always advance to the next step (Notes) after Client Info
-      setCurrentStep((s) => {
-        if (s === 3) return 4; // Go to Notes step
-        return Math.min(steps.length - 1, s + 1);
-      });
-    }
+    // If all validations pass, advance step
+    setCurrentStep((s) => {
+      if (s === 3) return 4; // Go to Notes step
+      return Math.min(steps.length - 1, s + 1);
+    });
   };
   const handlePrevious = () => setCurrentStep((s) => Math.max(0, s - 1));
 
@@ -176,35 +213,48 @@ export default function BookPage() {
               onDateChange={setDate}
             />
             <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block font-bold mb-2">Start Time</label>
-                <input
-                  type="time"
-                  className="w-full p-2 border rounded"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block font-bold mb-2">End Time</label>
-                <input
-                  type="time"
-                  className="w-full p-2 border rounded"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                />
+              <div className="flex flex-col sm:flex-row gap-2 w-full">
+                <div className="flex-1">
+                  <label className="block font-bold mb-2">Start Time</label>
+                  <input
+                    type="time"
+                    className="w-full p-2 border rounded"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 sm:mt-0">
+                  <label className="block font-bold mb-2">End Time</label>
+                  <input
+                    type="time"
+                    className="w-full p-2 border rounded"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                  />
+                  {startTime && endTime && endTime < startTime && (
+                    <div className="flex items-center justify-center my-2">
+                      <span className="inline-flex items-center gap-2 px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-semibold text-sm border border-yellow-300">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-4 h-4 text-yellow-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                          />
+                        </svg>
+                        Overnight event
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            {startTime && endTime && startTime >= endTime && (
-              <div className="text-red-600 mt-2">
-                End time must be after start time.
-              </div>
-            )}
-            {date && startTime && endTime && startTime > endTime && (
-              <div className="text-blue-700 mt-2">
-                Overnight event: {startTime} → {endTime} (next day)
-              </div>
-            )}
           </>
         )}
         {currentStep === 1 && (
@@ -282,7 +332,12 @@ export default function BookPage() {
             notes={notes}
           />
         )}
-        <div className="flex justify-between mt-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between mt-8 w-full">
+          {stepError && (
+            <div className="text-red-600 font-semibold text-center mb-2">
+              {stepError}
+            </div>
+          )}
           {!redirecting && (
             <>
               <button

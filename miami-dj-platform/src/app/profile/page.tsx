@@ -212,7 +212,7 @@ export default function ProfilePage() {
         </h2>
         <BookingList bookings={bookings} loading={loading} />
       </div>
-      <button
+      {/* <button
         type="button"
         className="fixed bottom-6 right-6 px-4 py-2 rounded bg-red-600 text-white font-bold hover:bg-red-800 transition shadow-lg z-50"
         onClick={() => {
@@ -222,7 +222,7 @@ export default function ProfilePage() {
         title="Delete Account"
       >
         Delete Account
-      </button>
+      </button> */}
       <DeleteAccountModal
         show={showDeleteModal}
         step={deleteStep}

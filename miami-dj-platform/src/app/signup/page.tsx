@@ -50,10 +50,10 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-blue-600 to-purple-900 dark:from-purple-900 dark:via-blue-900 dark:to-black">
+    <div className="min-h-screen flex items-center justify-center bg-[linear-gradient(135deg,_#e0e7ff_0%,_#a5b4fc_60%,_#c7d2fe_100%)] dark:bg-[linear-gradient(135deg,_#232946_0%,_#1a1a2e_60%,_#18181b_100%)]">
       <form
         onSubmit={handleSignup}
-        className="bg-gradient-to-br from-blue-900 via-purple-800 to-blue-700 dark:from-black dark:via-purple-900 dark:to-blue-900 p-8 rounded-2xl shadow-2xl max-w-md w-full border-4 border-neon-green dark:border-green-400"
+        className="bg-gradient-to-br from-indigo-200 via-blue-100 to-purple-100 dark:from-black dark:via-purple-900 dark:to-blue-900 p-8 rounded-2xl shadow-2xl max-w-md w-full border-4 border-neon-green dark:border-blue-400"
       >
         <h1 className="text-3xl font-extrabold mb-6 text-center text-neon-green drop-shadow-xl animate-pulse dark:text-green-400">
           Sign Up
