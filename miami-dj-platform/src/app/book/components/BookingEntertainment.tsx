@@ -57,10 +57,10 @@ export const BookingEntertainment: React.FC<{
   };
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-blue-200 dark:text-blue-100">
+      <h2 className="text-2xl font-bold mb-4 text-blue-500 dark:text-blue-100">
         Entertainment Selection{eventName ? ` for ${eventName}` : ""}
       </h2>
-      <p className="mb-4 text-blue-300 dark:text-blue-200">
+      <p className="mb-4 text-blue-400 dark:text-blue-200">
         Select Entertainment Type(s)
       </p>
       <div className="flex flex-col gap-3">
