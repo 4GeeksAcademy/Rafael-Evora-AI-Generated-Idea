@@ -10,7 +10,7 @@ export const BookingNotes: React.FC<BookingNotesProps> = ({
   onChange,
 }) => (
   <div className="mb-6">
-    <label className="block font-bold mb-2 text-blue-700">
+    <label className="block font-bold mb-2 text-blue-700 dark:text-blue-300">
       Additional Notes
     </label>
     <textarea

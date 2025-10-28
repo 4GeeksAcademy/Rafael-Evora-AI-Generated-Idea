@@ -306,7 +306,7 @@ export const Navbar: React.FC = () => {
                   className="text-base font-bold text-blue-700 dark:text-blue-200 hover:text-blue-400 dark:hover:text-blue-300 transition-colors drop-shadow border border-blue-300 dark:border-blue-700 rounded-xl px-4 py-2"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {user.email || "User"}
+                  {profileName || user.email || "User"}
                 </Link>
               )}
               {user ? (

@@ -79,15 +79,26 @@ export const EventDetailsSection: React.FC<EventDetailsProps> = ({
         </label>
         <input
           type="number"
-          min="1"
+          min="20"
+          max="1500"
           className="w-full rounded-xl bg-blue-50/80 border-0 shadow-md p-4 text-lg focus:ring-2 focus:ring-blue-300 mb-2"
           value={guestCount === undefined ? "" : guestCount}
-          onChange={(e) =>
-            setGuestCount(e.target.value ? Number(e.target.value) : undefined)
-          }
-          placeholder="Number of guests"
+          onChange={(e) => {
+            const val = Number(e.target.value);
+            if (val >= 20 && val <= 1500) {
+              setGuestCount(val);
+            } else {
+              setGuestCount(undefined);
+            }
+          }}
+          placeholder="Number of guests (20-1500)"
           required
         />
+        {guestCount !== undefined && (guestCount < 20 || guestCount > 1500) && (
+          <div className="text-red-500 text-sm mt-1">
+            Guest count must be between 20 and 1500.
+          </div>
+        )}
       </div>
     </div>
   </div>

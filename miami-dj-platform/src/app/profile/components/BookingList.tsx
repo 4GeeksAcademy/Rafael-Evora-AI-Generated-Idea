@@ -25,9 +25,15 @@ const BookingList: React.FC<BookingListProps> = ({ bookings, loading }) => {
       <div className="text-blue-700 dark:text-blue-200">No bookings found.</div>
     );
   }
+  // Sort bookings by proximity to event date (soonest first)
+  const sortedBookings = [...bookings].sort((a, b) => {
+    const dateA = new Date(a.eventDate);
+    const dateB = new Date(b.eventDate);
+    return dateA.getTime() - dateB.getTime();
+  });
   return (
     <ul className="space-y-4">
-      {bookings.map((booking: any) => (
+      {sortedBookings.map((booking: any) => (
         <li
           key={booking.id}
           className="bg-blue-100 dark:bg-blue-900 rounded-xl p-4 shadow"
@@ -39,12 +45,22 @@ const BookingList: React.FC<BookingListProps> = ({ bookings, loading }) => {
             Status:{" "}
             <span
               className={
-                booking.status === "approved"
+                booking.status?.toLowerCase() === "confirmed"
                   ? "text-green-600 dark:text-green-400"
-                  : "text-yellow-600 dark:text-yellow-400"
+                  : booking.status?.toLowerCase() === "pending"
+                    ? "text-yellow-600 dark:text-yellow-400"
+                    : booking.status?.toLowerCase() === "approved"
+                      ? "text-green-600 dark:text-green-400"
+                      : booking.status?.toLowerCase() === "requested"
+                        ? "text-yellow-600 dark:text-yellow-400"
+                        : "text-blue-600 dark:text-blue-400"
               }
             >
-              {booking.status}
+              {booking.status?.toLowerCase() === "confirmed"
+                ? "Confirmed"
+                : booking.status?.toLowerCase() === "pending"
+                  ? "Pending"
+                  : booking.status || "requested"}
             </span>
           </div>
           <div className="text-blue-900 dark:text-blue-200">
