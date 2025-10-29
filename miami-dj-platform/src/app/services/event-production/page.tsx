@@ -27,14 +27,16 @@ export default function EventProduction() {
         />
       ))}
       <div className="flex-1 flex flex-col items-center justify-center text-center p-8 relative z-10">
-        <h1 className="text-4xl font-extrabold text-blue-700 dark:text-blue-300 mb-4">
-          Event Production
-        </h1>
-        <p className="text-lg text-blue-900 dark:text-blue-200 max-w-2xl mb-8">
-          Full event production services: sound, lighting, management, and more.
-          Let us handle the details so you can enjoy your event stress-free.
-          Contact us for details and booking!
-        </p>
+        <div className="bg-gray-400 bg-opacity-75 rounded-2xl p-8 mb-8 dark:bg-blue-950 dark:bg-opacity-50">
+          <h1 className="text-4xl font-extrabold text-blue-700 dark:text-blue-300 mb-4">
+            Event Production
+          </h1>
+          <p className="text-lg text-blue-900 dark:text-blue-200 max-w-2xl mb-8">
+            Full event production services: sound, lighting, management, and
+            more. Let us handle the details so you can enjoy your event
+            stress-free. Contact us for details and booking!
+          </p>
+        </div>
         <div className="flex flex-col md:flex-row gap-6 justify-center items-center mt-8">
           <a
             href="/services/dj-sets"
