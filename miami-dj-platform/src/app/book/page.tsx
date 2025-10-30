@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BookingEntertainment } from "./components/BookingEntertainment";
 import { BookingAddressSelect } from "./components/BookingAddressSelect";
 import { BookingEventDetails } from "./components/BookingEventDetails";
@@ -8,19 +7,13 @@ import { BookingNotes } from "./components/BookingNotes";
 import { BookingSummary } from "./components/BookingSummary";
 import { BookingStatus } from "./components/BookingStatus";
 import { ClientInfoSection } from "./components/ClientInfoSection";
+import { useCart } from "../../lib/contexts/CartContext";
 
 export default function BookPage() {
-  // ...existing code...
-  // ...existing code...
-  // Autofill client info state for logged-in user
-
   // Simulate user authentication (replace with real user context)
   const userLoggedIn = false; // set to true to simulate logged-in user
-  const user = {
-    name: "John",
-    surname: "Doe",
-    email: "john@example.com",
-  };
+  const userFullName = "John Doe";
+  const userEmail = "john@example.com";
 
   // State
   const [currentStep, setCurrentStep] = useState(0);
@@ -37,60 +30,23 @@ export default function BookPage() {
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<"success" | "error" | null>(null);
-  const [redirecting, setRedirecting] = useState(false);
-  useEffect(() => {
-    if (status === "success") {
-      setRedirecting(true);
-      setTimeout(() => {
-        window.location.href = "/book/confirmation";
-      }, 1500);
-    }
-  }, [status]);
   const [submitting, setSubmitting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState("");
   // Validation errors
   const [clientNameError, setClientNameError] = useState(false);
   const [clientEmailError, setClientEmailError] = useState(false);
   const [clientPhoneError, setClientPhoneError] = useState(false);
-  const [stepError, setStepError] = useState<string>("");
 
-  useEffect(() => {
-    if (userLoggedIn) {
-      const fullName = [user.name, user.surname].filter(Boolean).join(" ");
-      if (fullName && !clientName) setClientName(fullName);
-      if (user.email && !clientEmail) setClientEmail(user.email);
-    }
-  }, [
-    userLoggedIn,
-    user.name,
-    user.surname,
-    user.email,
-    clientName,
-    clientEmail,
-    setClientName,
-    setClientEmail,
-  ]);
+  const { addItem, clearCart, items } = useCart();
 
   // Validation helpers
   const validateEmail = (email: string) => /.+@.+\..+/.test(email);
   const validatePhone = (phone: string) =>
     /^\d{10,}$/.test(phone.replace(/\D/g, ""));
-
-  function roundToNearest5(timeStr: string) {
-    if (!timeStr) return "";
-    const [h, m] = timeStr.split(":").map(Number);
-    if (isNaN(h) || isNaN(m)) return timeStr;
-    let rounded = Math.round(m / 5) * 5;
-    if (rounded === 60) {
-      // roll over to next hour
-      return `${(h + 1).toString().padStart(2, "0")}:00`;
-    }
-    return `${h.toString().padStart(2, "0")}:${rounded.toString().padStart(2, "0")}`;
-  }
 
   // Steps
   const steps = [
@@ -104,180 +60,172 @@ export default function BookPage() {
 
   // Step validation
   const canNext = () => {
-    // Step 0: Event Details
     if (currentStep === 0) {
-      if (!date)
-        return { isValid: false, error: "Please select an event date." };
-      // Date range: today to 3 years from now
-      const today = new Date();
-      const selectedDate = new Date(date);
-      const maxDate = new Date(today);
-      maxDate.setFullYear(today.getFullYear() + 3);
-      if (selectedDate < today)
-        return { isValid: false, error: "Event date cannot be in the past." };
-      if (selectedDate > maxDate)
-        return {
-          isValid: false,
-          error: "Event date cannot be more than 3 years from now.",
-        };
-      if (!startTime)
-        return { isValid: false, error: "Please select a start time." };
-      if (!endTime)
-        return { isValid: false, error: "Please select an end time." };
-      // Time format: HH:mm, increments of 5
-      const validTime = (t: string) => {
-        const [h, m] = t.split(":").map(Number);
-        return !isNaN(h) && !isNaN(m) && m % 5 === 0;
-      };
-      if (!validTime(startTime))
-        return {
-          isValid: false,
-          error: "Start time must be in 5-minute increments.",
-        };
-      if (!validTime(endTime))
-        return {
-          isValid: false,
-          error: "End time must be in 5-minute increments.",
-        };
-      return { isValid: true };
+      return !!date && !!startTime && !!endTime && startTime !== endTime;
     }
-    // Step 1: Entertainment
     if (currentStep === 1) {
-      if (entertainment.length === 0)
-        return {
-          isValid: false,
-          error: "Please select at least one entertainment option.",
-        };
-      return { isValid: true };
+      return entertainment.length > 0;
     }
-    // Step 2: Technical
     if (currentStep === 2) {
-      if (!lighting || !audio)
-        return {
-          isValid: false,
-          error: "Please select lighting and audio preferences.",
-        };
-      return { isValid: true };
+      return !!lighting && !!audio;
     }
-    // Step 3: Client Info
     if (currentStep === 3) {
-      if (userLoggedIn) return { isValid: true };
-      if (!clientName.trim())
-        return { isValid: false, error: "Please enter your name." };
-      if (!validateEmail(clientEmail))
-        return { isValid: false, error: "Please enter a valid email address." };
-      if (!validatePhone(clientPhone))
-        return { isValid: false, error: "Please enter a valid phone number." };
-      if (!address.trim())
-        return { isValid: false, error: "Please enter your event address." };
-      if (!state.trim())
-        return { isValid: false, error: "Please enter your state." };
-      if (!zip.trim())
-        return { isValid: false, error: "Please enter your zip code." };
-      // Example: guest count validation (if you have a guestCount field)
-      // if (guestCount < 20 || guestCount > 1500)
-      //   return { isValid: false, error: "Guest count must be between 20 and 1500." };
-      return { isValid: true };
+      if (userLoggedIn) return true;
+      return (
+        clientName.trim().length > 0 &&
+        validateEmail(clientEmail) &&
+        validatePhone(clientPhone) &&
+        address.trim().length > 0
+      );
     }
     if (currentStep === 4) {
-      return { isValid: true };
+      return true; // Notes are optional
     }
-    return { isValid: true };
+    return true;
   };
 
   // Navigation
   const handleNext = () => {
-    // Show error immediately if invalid
-    const { isValid, error } = canNext();
-    setStepError(
-      isValid ? "" : error || "Please fill out all required fields."
-    );
-    if (!isValid) {
-      if (currentStep === 3 && !userLoggedIn) {
-        setClientNameError(!clientName.trim());
-        setClientEmailError(!validateEmail(clientEmail));
-        setClientPhoneError(!validatePhone(clientPhone));
-      }
-      return;
+    if (currentStep === 3 && !userLoggedIn) {
+      setClientNameError(clientName.trim().length === 0);
+      setClientEmailError(!validateEmail(clientEmail));
+      setClientPhoneError(!validatePhone(clientPhone));
+      if (!canNext()) return;
     }
-    setCurrentStep((s) => {
-      if (s === 3) return 4; // Go to Notes step
-      return Math.min(steps.length - 1, s + 1);
-    });
+    if (canNext()) setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
   };
   const handlePrevious = () => setCurrentStep((s) => Math.max(0, s - 1));
 
   // Submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Do nothing here; confirmation should only show when user clicks Request Booking
+    setShowConfirm(true);
   };
-  const confirmBooking = async () => {
+  const confirmBooking = () => {
     setShowConfirm(false);
     setSubmitting(true);
-    // Generate event name if not provided
-    let finalEventName = eventName;
-    if (!finalEventName) {
-      if (!date) {
-        finalEventName =
-          (userLoggedIn ? `${user.name} ${user.surname}` : clientName) +
-          "'s event";
-      } else {
-        const d = new Date(date);
-        const month = d.toLocaleString("default", { month: "long" });
-        const day = d.getDate();
-        const year = d.getFullYear();
-        const suffix = (n: number) => {
-          if (n >= 11 && n <= 13) return "th";
-          switch (n % 10) {
-            case 1:
-              return "st";
-            case 2:
-              return "nd";
-            case 3:
-              return "rd";
-            default:
-              return "th";
-          }
-        };
-        const firstName =
-          (userLoggedIn ? `${user.name} ${user.surname}` : clientName).split(
-            " "
-          )[0] || "";
-        finalEventName = `${month} ${day}${suffix(day)} ${year} ${firstName}'s event`;
+    // Send booking data to booking_request
+    const bookingData = {
+      name: userLoggedIn ? userFullName : clientName,
+      event_name: eventName,
+      event_date: date,
+      start_time: startTime,
+      end_time: endTime,
+      overnight: startTime && endTime ? startTime >= endTime : false,
+      entertainment_section: entertainment.join(", "),
+      audio,
+      lighting,
+      status: "Pending",
+      email: userLoggedIn ? userEmail : clientEmail,
+      created_at: new Date().toISOString(),
+      user_id: userLoggedIn ? userFullName : null,
+      address,
+      notes,
+      state,
+      zip,
+    };
+    fetch("/api/booking_request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bookingData),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const error = await res.json();
+          setStatus("error");
+          setSubmitting(false);
+          return;
+        }
+        setStatus("success");
+        setSubmitting(false);
+      })
+      .catch(() => {
+        setStatus("error");
+        setSubmitting(false);
+      });
+  };
+
+  React.useEffect(() => {
+    // Prevent cart updates after booking is successful
+    if (status === "success") return;
+    // Only add Event Details if at least one field is filled
+    if (currentStep === 0) {
+      if (eventName || date || startTime || endTime) {
+        addItem({
+          step: "Event Details",
+          data: {
+            eventName,
+            date,
+            startTime,
+            endTime,
+            overnight: startTime && endTime && startTime >= endTime,
+          },
+        });
       }
-      setEventName(finalEventName);
+      // Removed clearCart logic from here to prevent update loop
     }
-    try {
-      const res = await fetch("/api/booking_request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: userLoggedIn ? `${user.name} ${user.surname}` : clientName,
-          email: userLoggedIn ? user.email : clientEmail,
-          user_id: userLoggedIn ? "user-id-placeholder" : null, // Replace with real user id if available
-          event_name: finalEventName,
-          event_date: date,
+    if (currentStep === 1) {
+      if (entertainment.length > 0) {
+        addItem({ step: "Services", data: { entertainment } });
+      }
+    }
+    if (currentStep === 2) {
+      if (lighting || audio) {
+        addItem({ step: "Technical", data: { lighting, audio } });
+      }
+    }
+    if (currentStep === 3) {
+      if (clientName || clientEmail || clientPhone || address) {
+        addItem({
+          step: "Client Info",
+          data: { clientName, clientEmail, clientPhone, address },
+        });
+      }
+    }
+    if (currentStep === 4) {
+      if (notes) {
+        addItem({ step: "Notes", data: { notes } });
+      }
+    }
+    if (currentStep === 5) {
+      addItem({
+        step: "Summary",
+        data: {
+          user: userLoggedIn ? userFullName : clientName,
+          address,
+          event_name: eventName,
+          date,
+          notes,
           start_time: startTime,
           end_time: endTime,
-          overnight: startTime > endTime,
+          overnight: startTime && endTime ? endTime < startTime : undefined,
           entertainment_section: entertainment.join(", "),
-          audio: audio || "",
-          lighting: lighting || "",
-          address: address,
-          state: state,
-          zip: zip,
-          notes: notes,
-        }),
+          audio,
+          lighting,
+        },
       });
-      if (!res.ok) throw new Error("Failed to submit booking");
-      setStatus("success");
-    } catch (err) {
-      setStatus("error");
-    } finally {
-      setSubmitting(false);
     }
-  };
+  }, [
+    currentStep,
+    eventName,
+    date,
+    startTime,
+    endTime,
+    entertainment,
+    lighting,
+    audio,
+    clientName,
+    clientEmail,
+    clientPhone,
+    address,
+    notes,
+    userLoggedIn,
+    userFullName,
+  ]);
+
+  React.useEffect(() => {
+    if (status === "success") clearCart();
+  }, [status, clearCart]);
 
   return (
     <div className="min-h-screen py-6 px-2 sm:py-12 sm:px-4 bg-gradient-to-br from-blue-100 via-purple-100 to-blue-200 dark:from-blue-900 dark:via-purple-900 dark:to-blue-900 flex flex-col items-center">
@@ -297,62 +245,46 @@ export default function BookPage() {
               onDateChange={setDate}
             />
             <div className="flex gap-4">
-              <div className="flex flex-col sm:flex-row gap-2 w-full">
-                <div className="flex-1">
-                  <label className="block font-bold mb-2 dark:text-blue-300">
-                    Start Time
-                  </label>
-                  <input
-                    type="time"
-                    step="300"
-                    className="w-full p-2 border rounded"
-                    value={startTime}
-                    onChange={(e) =>
-                      setStartTime(roundToNearest5(e.target.value))
-                    }
-                    onBlur={(e) =>
-                      setStartTime(roundToNearest5(e.target.value))
-                    }
-                  />
-                </div>
-                <div className="flex-1 sm:mt-0">
-                  <label className="block font-bold mb-2 dark:text-blue-300">
-                    End Time
-                  </label>
-                  <input
-                    type="time"
-                    step="300"
-                    className="w-full p-2 border rounded"
-                    value={endTime}
-                    onChange={(e) =>
-                      setEndTime(roundToNearest5(e.target.value))
-                    }
-                    onBlur={(e) => setEndTime(roundToNearest5(e.target.value))}
-                  />
-                  {startTime && endTime && endTime < startTime && (
-                    <div className="flex items-center justify-center my-2">
-                      <span className="inline-flex items-center gap-2 px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-semibold text-sm border border-yellow-300">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4 text-yellow-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
-                          />
-                        </svg>
-                        Overnight event
-                      </span>
-                    </div>
-                  )}
-                </div>
+              <div className="flex-1">
+                <label className="block font-bold mb-2">Start Time</label>
+                <input
+                  type="time"
+                  className="w-full p-2 border rounded"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block font-bold mb-2">End Time</label>
+                <input
+                  type="time"
+                  className="w-full p-2 border rounded"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                />
               </div>
             </div>
+            {startTime && endTime && startTime >= endTime && (
+              <div className="flex items-center justify-center my-2">
+                <span className="inline-flex items-center gap-2 px-3 py-2 rounded bg-blue-100 text-blue-700 font-bold text-base border border-blue-300 shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 text-blue-500 dark:text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                    />
+                  </svg>
+                  Overnight event
+                </span>
+              </div>
+            )}
           </>
         )}
         {currentStep === 1 && (
@@ -364,14 +296,12 @@ export default function BookPage() {
         )}
         {currentStep === 2 && (
           <div className="mb-4">
-            <label className="block font-bold mb-2 dark:text-blue-300">
+            <label className="block font-bold mb-2">
               Technical Preferences
             </label>
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="block mb-1 dark:text-blue-300">
-                  Lighting
-                </label>
+                <label className="block mb-1">Lighting</label>
                 <select
                   className="w-full p-2 border rounded"
                   value={lighting || ""}
@@ -383,7 +313,7 @@ export default function BookPage() {
                 </select>
               </div>
               <div className="flex-1">
-                <label className="block mb-1 dark:text-blue-300">Audio</label>
+                <label className="block mb-1">Audio</label>
                 <select
                   className="w-full p-2 border rounded"
                   value={audio || ""}
@@ -401,9 +331,8 @@ export default function BookPage() {
         {currentStep === 3 && (
           <ClientInfoSection
             userLoggedIn={userLoggedIn}
-            userName={user?.name}
-            userSurname={user?.surname}
-            userEmail={user?.email}
+            userName={userFullName}
+            userEmail={userEmail}
             clientName={clientName}
             setClientName={setClientName}
             clientEmail={clientEmail}
@@ -426,111 +355,49 @@ export default function BookPage() {
         )}
         {currentStep === 5 && (
           <BookingSummary
-            user={userLoggedIn ? `${user.name} ${user.surname}` : clientName}
+            user={userLoggedIn ? userFullName : clientName}
             address={address}
-            event_name={
-              eventName
-                ? eventName
-                : (() => {
-                    if (!date)
-                      return userLoggedIn
-                        ? `${user.name} ${user.surname}'s event`
-                        : `${clientName}'s event`;
-                    const d = new Date(date);
-                    const month = d.toLocaleString("default", {
-                      month: "long",
-                    });
-                    const day = d.getDate();
-                    const year = d.getFullYear();
-                    const suffix = (n: number) => {
-                      if (n >= 11 && n <= 13) return "th";
-                      switch (n % 10) {
-                        case 1:
-                          return "st";
-                        case 2:
-                          return "nd";
-                        case 3:
-                          return "rd";
-                        default:
-                          return "th";
-                      }
-                    };
-                    const firstName =
-                      (userLoggedIn
-                        ? `${user.name} ${user.surname}`
-                        : clientName
-                      ).split(" ")[0] || "";
-                    return `${month} ${day}${suffix(day)} ${year} ${firstName}'s event`;
-                  })()
-            }
+            event_name={eventName}
             date={date}
             notes={notes}
-            start_time={startTime}
-            end_time={endTime}
-            overnight={startTime && endTime ? endTime < startTime : undefined}
-            entertainment_section={entertainment.join(", ")}
-            audio={audio}
-            lighting={lighting}
-            state={state}
-            zip={zip}
-            technical_preferences={undefined}
           />
         )}
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between mt-8 w-full">
-          {stepError && (
-            <div className="text-red-600 font-semibold text-center mb-2">
-              {stepError}
-            </div>
-          )}
-          {!redirecting && (
-            <div className="flex flex-row gap-4 w-full justify-between">
-              <button
-                type="button"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
-                onClick={handlePrevious}
-                disabled={currentStep === 0 || submitting}
-              >
-                Previous
-              </button>
-              {currentStep < steps.length - 1 ? (
-                <button
-                  type="button"
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
-                  onClick={handleNext}
-                  disabled={submitting}
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
-                  disabled={submitting}
-                  onClick={() => {
-                    const { isValid, error } = canNext();
-                    if (!isValid) {
-                      setStepError(
-                        error || "Please fill out all required fields."
-                      );
-                      return;
-                    }
-                    setShowConfirm(true);
-                  }}
-                >
-                  {submitting ? "Submitting..." : "Request Booking"}
-                </button>
-              )}
-            </div>
+        <div className="flex justify-between mt-8">
+          <button
+            type="button"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
+            onClick={handlePrevious}
+            disabled={currentStep === 0 || submitting}
+          >
+            Previous
+          </button>
+          {currentStep < steps.length - 1 ? (
+            <button
+              type="button"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
+              onClick={handleNext}
+              disabled={submitting || !canNext()}
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
+              disabled={submitting || !canNext()}
+            >
+              {submitting ? "Submitting..." : "Request Booking"}
+            </button>
           )}
         </div>
         <BookingStatus status={status} />
         {showConfirm && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
             <div className="bg-white dark:bg-blue-900 rounded-xl shadow-xl p-8 max-w-md w-full text-center">
-              <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-blue-300">
+              <h2 className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-300">
                 Confirm Booking Request
               </h2>
-              <p className="mb-6 dark:text-blue-300">
+              <p className="mb-6 text-blue-800 dark:text-blue-200">
                 Are all fields filled in with your event requests?
               </p>
               <div className="flex justify-center gap-6">

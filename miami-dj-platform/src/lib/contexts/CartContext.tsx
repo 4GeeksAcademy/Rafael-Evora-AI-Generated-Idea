@@ -21,18 +21,20 @@ export const useCart = () => {
   return ctx;
 };
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addItem = (item: CartItem) => {
-    setItems((prev) => [...prev.filter(i => i.step !== item.step), item]);
-  };
+  const addItem = React.useCallback((item: CartItem) => {
+    setItems((prev) => [...prev.filter((i) => i.step !== item.step), item]);
+  }, []);
 
-  const updateItem = (step: string, data: any) => {
-    setItems((prev) => prev.map(i => i.step === step ? { ...i, data } : i));
-  };
+  const updateItem = React.useCallback((step: string, data: any) => {
+    setItems((prev) => prev.map((i) => (i.step === step ? { ...i, data } : i)));
+  }, []);
 
-  const clearCart = () => setItems([]);
+  const clearCart = React.useCallback(() => setItems([]), []);
 
   return (
     <CartContext.Provider value={{ items, addItem, updateItem, clearCart }}>

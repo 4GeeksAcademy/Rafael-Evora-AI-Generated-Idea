@@ -14,37 +14,6 @@ const navItems = [
 ];
 
 export const Navbar: React.FC = () => {
-  // Track last menu button click to avoid double close
-  const lastMenuBtnClick = React.useRef<number>(0);
-  // Track last cart button click to avoid double close
-  const lastCartBtnClick = React.useRef<number>(0);
-  const cartBoxRef = React.useRef<HTMLDivElement>(null);
-  const [cartOpen, setCartOpen] = React.useState(false);
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  // Close cart when clicking outside
-  React.useEffect(() => {
-    if (!cartOpen && !menuOpen) return;
-    function handleClickOutside(event: MouseEvent) {
-      // Ignore if cart button or menu button was just clicked
-      if (Date.now() - lastCartBtnClick.current < 100) return;
-      if (Date.now() - lastMenuBtnClick.current < 100) return;
-      if (
-        cartBoxRef.current &&
-        !cartBoxRef.current.contains(event.target as Node)
-      ) {
-        setCartOpen(false);
-      }
-      // Close menu if open and click outside
-      const menuBox = document.getElementById("navbar-menu-box");
-      if (menuOpen && menuBox && !menuBox.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [cartOpen, menuOpen]);
   const user = useSupabaseUser();
   const [profileName, setProfileName] = React.useState<string | null>(null);
   const handleLogout = async () => {
@@ -53,6 +22,7 @@ export const Navbar: React.FC = () => {
   };
   const [isDark, setIsDark] = React.useState(false);
   const { items } = useCart();
+  const [cartOpen, setCartOpen] = React.useState(false);
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       setIsDark(document.documentElement.classList.contains("dark"));
@@ -78,11 +48,6 @@ export const Navbar: React.FC = () => {
         const res = await fetch(
           `/api/user/profile?user_id=${encodeURIComponent(user.id)}`
         );
-        if (res.status === 404) {
-          // Fallback for admin or missing user
-          setProfileName(user.email || "Admin");
-          return;
-        }
         if (!res.ok) {
           console.error(
             "Navbar: Failed to fetch profile",
@@ -115,9 +80,9 @@ export const Navbar: React.FC = () => {
   }, [user]);
 
   const navBg = isDark
-    ? "linear-gradient(90deg, rgba(30,41,59,0.70) 0%, rgba(49,46,129,0.85) 40%, rgba(30,41,59,0.85) 100%)"
-    : "linear-gradient(90deg, rgba(199,210,254,0.70) 0%, rgba(165,180,252,0.85) 40%, rgba(199,210,254,0.85) 100%)";
-  // ...existing code...
+    ? "linear-gradient(90deg, #1e293b 0%, #312e81 40%, #1e293b 100%)"
+    : "linear-gradient(90deg, #c7d2fe 0%, #a5b4fc 40%, #c7d2fe 100%)";
+  const [menuOpen, setMenuOpen] = React.useState(false);
   return (
     <nav
       className="sticky top-0 z-50 w-full border-b border-blue-200 dark:border-blue-400 shadow-lg"
@@ -173,16 +138,8 @@ export const Navbar: React.FC = () => {
         <div className="md:hidden flex items-center relative">
           {/* User profile link/text completely removed from mobile nav */}
           <button
-            id="navbar-cart-btn"
-            onMouseDown={(e) => {
-              lastCartBtnClick.current = Date.now();
-              e.stopPropagation();
-              setCartOpen((open) => {
-                if (!open) setMenuOpen(false); // opening cart closes menu
-                return !open;
-              });
-            }}
-            className="relative px-2 py-2 rounded-xl bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 shadow border border-blue-300 dark:border-blue-700 ml-2 mr-3"
+            onClick={() => setCartOpen(!cartOpen)}
+            className="relative px-2 py-2 rounded-xl bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 shadow border border-blue-300 dark:border-blue-700 ml-2"
           >
             <svg
               fill="none"
@@ -203,11 +160,7 @@ export const Navbar: React.FC = () => {
           </button>
           <ThemeToggle />
           {cartOpen && (
-            <div
-              ref={cartBoxRef}
-              className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
               <h3 className="text-lg font-extrabold mb-2 text-blue-700 drop-shadow-xl animate-pulse dark:text-blue-300">
                 Your Cart
               </h3>
@@ -234,14 +187,25 @@ export const Navbar: React.FC = () => {
                             </li>
                           ))}
                           {/* Overnight event logic */}
-                          {item.data?.startTime !== undefined &&
-                            item.data?.finishTime !== undefined &&
-                            String(item.data.startTime) ===
-                              String(item.data.finishTime) && (
-                              <li className="mb-1 text-pink-600 font-bold">
-                                Overnight event
-                              </li>
-                            )}
+                          {item.data?.overnight && (
+                            <li className="mb-1 text-blue-700 font-bold flex items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-4 h-4 text-blue-500"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                                />
+                              </svg>
+                              Overnight event
+                            </li>
+                          )}
                         </ul>
                       ) : (
                         <span className="text-blue-900 dark:text-blue-200">
@@ -256,16 +220,8 @@ export const Navbar: React.FC = () => {
           )}
           <button
             aria-label="Open menu"
-            id="navbar-menu-btn"
             className="p-2 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-400 transition-all duration-300 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-100 dark:from-blue-400 dark:via-blue-700 dark:to-blue-400 shadow-lg hover:scale-105 ml-2"
-            onMouseDown={(e) => {
-              lastMenuBtnClick.current = Date.now();
-              e.stopPropagation();
-              setMenuOpen((open) => {
-                if (!open) setCartOpen(false); // opening menu closes cart
-                return !open;
-              });
-            }}
+            onClick={() => setMenuOpen((open) => !open)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -285,11 +241,7 @@ export const Navbar: React.FC = () => {
             </svg>
           </button>
           {menuOpen && (
-            <div
-              id="navbar-menu-box"
-              className="absolute right-0 top-12 w-64 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-4"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="absolute right-0 top-12 w-64 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-4">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
@@ -306,7 +258,7 @@ export const Navbar: React.FC = () => {
                   className="text-base font-bold text-blue-700 dark:text-blue-200 hover:text-blue-400 dark:hover:text-blue-300 transition-colors drop-shadow border border-blue-300 dark:border-blue-700 rounded-xl px-4 py-2"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {profileName || user.email || "User"}
+                  {user.email || "User"}
                 </Link>
               )}
               {user ? (
@@ -358,13 +310,8 @@ export const Navbar: React.FC = () => {
           <ThemeToggle />
           <button
             aria-label="Cart"
-            id="navbar-cart-btn-desktop"
             className="p-2 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-400 transition-all duration-300 relative bg-gradient-to-r from-blue-200 via-blue-300 to-blue-100 dark:from-blue-400 dark:via-blue-700 dark:to-blue-400 shadow-lg hover:scale-105"
-            onMouseDown={(e) => {
-              lastCartBtnClick.current = Date.now();
-              e.stopPropagation();
-              setCartOpen((open) => !open);
-            }}
+            onClick={() => setCartOpen((open) => !open)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -387,7 +334,7 @@ export const Navbar: React.FC = () => {
             )}
           </button>
           {cartOpen && (
-            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-600 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-600 dark:border-blue-600 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
               <h3 className="text-lg font-extrabold mb-2 text-blue-700 drop-shadow-xl animate-pulse dark:text-blue-300">
                 Your Cart
               </h3>
@@ -398,7 +345,7 @@ export const Navbar: React.FC = () => {
                   return (
                     <div
                       key={item.step}
-                      className="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-100 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 rounded-xl p-3 mb-2 shadow flex flex-col gap-1"
+                      className="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-100 dark:from-blue-600 dark:via-blue-900 dark:to-blue-900 rounded-xl p-3 mb-2 shadow flex flex-col gap-1"
                     >
                       <div className="font-bold text-blue-700 dark:text-blue-200 text-lg mb-1">
                         {item.step.replace(/([A-Z])/g, " $1").trim()}
@@ -414,14 +361,25 @@ export const Navbar: React.FC = () => {
                             </li>
                           ))}
                           {/* Overnight event logic */}
-                          {item.data?.startTime !== undefined &&
-                            item.data?.finishTime !== undefined &&
-                            String(item.data.startTime) ===
-                              String(item.data.finishTime) && (
-                              <li className="mb-1 text-pink-600 font-bold">
-                                Overnight event
-                              </li>
-                            )}
+                          {item.data?.overnight && (
+                            <li className="mb-1 text-blue-700 font-bold flex items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-4 h-4 text-blue-500"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                                />
+                              </svg>
+                              Overnight event
+                            </li>
+                          )}
                         </ul>
                       ) : (
                         <span className="text-blue-900 dark:text-blue-200">

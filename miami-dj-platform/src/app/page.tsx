@@ -10,6 +10,9 @@ export default function Home() {
     typeof window !== "undefined" &&
       document.documentElement.classList.contains("dark")
   );
+
+  const [profileName, setProfileName] = React.useState<string | null>(null);
+
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       setIsDark(document.documentElement.classList.contains("dark"));
@@ -23,6 +26,55 @@ export default function Home() {
       return () => observer.disconnect();
     }
   }, []);
+
+  //----------------------------------------
+  React.useEffect(() => {
+    if (!user) {
+      setProfileName(null);
+      return;
+    }
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/user/profile?user_id=${encodeURIComponent(user.id)}`
+        );
+        if (res.status === 404) {
+          // Fallback for admin or missing user
+          setProfileName(user.email || "Admin");
+          return;
+        }
+        if (!res.ok) {
+          console.error(
+            "Navbar: Failed to fetch profile",
+            res.status,
+            res.statusText
+          );
+          setProfileName(null);
+          return;
+        }
+        const text = await res.text();
+        if (!text) {
+          setProfileName(null);
+          return;
+        }
+        let name = null;
+        try {
+          const data = JSON.parse(text);
+          if (data && data.user && (data.user.name || data.user.surname)) {
+            name = `${data.user.name || ""} ${data.user.surname || ""}`.trim();
+          }
+        } catch (err) {
+          console.error("Navbar: Error parsing profile JSON", err);
+        }
+        setProfileName(name);
+      } catch (err) {
+        console.error("Navbar: Fetch error", err);
+        setProfileName(null);
+      }
+    })();
+  }, [user]);
+  //----------------------------------------
+
   const heroBg = isDark
     ? "linear-gradient(90deg, rgba(30,41,59,0.45) 0%, rgba(49,46,129,0.85) 40%, rgba(30,41,59,0.45) 100%)"
     : "linear-gradient(90deg, rgba(199,210,254,0.35) 0%, rgba(165,180,252,0.85) 40%, rgba(199,210,254,0.35) 100%)";
@@ -46,8 +98,16 @@ export default function Home() {
       <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center py-16 px-4 overflow-hidden z-10">
         <div className="relative z-10 w-full flex flex-col items-center justify-center">
           {user && (
-            <div className="mb-4 text-lg font-bold text-neon-green drop-shadow-xl dark:text-green-400">
-              Welcome, {user.email}!
+            <div
+              className="px-6 py-2 rounded-3xl mb-2 shadow-2xl border-0 text-lg font-bold text-blue-900 drop-shadow-xl dark:text-white"
+              style={{
+                background: isDark
+                  ? "radial-gradient(circle, rgba(49,46,129,0.85) 60%, rgba(30,41,59,0.25) 100%)"
+                  : "radial-gradient(circle, rgba(165,180,252,0.85) 60%, rgba(199,210,254,0.15) 100%)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              Welcome, {profileName ? profileName : user.email}!
             </div>
           )}
           <div
@@ -111,7 +171,7 @@ export default function Home() {
       <section className="py-12 px-4">
         <h2
           className={`text-3xl font-extrabold drop-shadow-xl mb-8 text-center ${
-            isDark ? "text-blue-300" : "text-blue-900"
+            isDark ? "text-white" : "text-blue-900"
           }`}
         >
           Featured Services
