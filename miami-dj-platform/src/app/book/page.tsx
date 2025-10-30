@@ -99,7 +99,10 @@ export default function BookPage() {
   // Submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setShowConfirm(true);
+    // Only show confirmation if on summary step
+    if (currentStep === steps.length - 1) {
+      setShowConfirm(true);
+    }
   };
   const confirmBooking = () => {
     setShowConfirm(false);
@@ -360,6 +363,14 @@ export default function BookPage() {
             event_name={eventName}
             date={date}
             notes={notes}
+            start_time={startTime}
+            end_time={endTime}
+            overnight={startTime && endTime ? endTime < startTime : undefined}
+            entertainment_section={entertainment.join(", ")}
+            audio={audio}
+            lighting={lighting}
+            state={state}
+            zip={zip}
           />
         )}
         <div className="flex justify-between mt-8">
@@ -371,7 +382,7 @@ export default function BookPage() {
           >
             Previous
           </button>
-          {currentStep < steps.length - 1 ? (
+          {currentStep < steps.length - 1 && (
             <button
               type="button"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"
@@ -380,7 +391,8 @@ export default function BookPage() {
             >
               Next
             </button>
-          ) : (
+          )}
+          {currentStep === steps.length - 1 && (
             <button
               type="submit"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-200 via-blue-300 to-purple-200 text-blue-700 font-bold text-base shadow-lg hover:scale-105 hover:from-purple-200 hover:to-blue-200 transition-all duration-300 focus:ring-4 focus:ring-blue-200 dark:bg-gradient-to-r dark:from-blue-400 dark:via-blue-700 dark:to-purple-400 dark:text-blue-200 dark:focus:ring-blue-400"

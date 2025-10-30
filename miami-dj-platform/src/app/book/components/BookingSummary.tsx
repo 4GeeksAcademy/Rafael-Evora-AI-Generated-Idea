@@ -95,6 +95,8 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
           <strong>Technical Preferences:</strong> {technical_preferences}
         </div>
       )}
+      {/* Add more technicals/services if available */}
+      {/* Example: DJ Services, Live Bands, Event Production, etc. */}
       {notes && (
         <div>
           <strong>Notes:</strong> {notes}
