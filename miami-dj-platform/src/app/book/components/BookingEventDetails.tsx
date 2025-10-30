@@ -1,4 +1,9 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import "react-datepicker/dist/react-datepicker.css";
+
+const DatePicker = dynamic(() => import("react-datepicker").then(mod => mod.default), { ssr: false }) as React.FC<any>;
 
 export const BookingEventDetails: React.FC<{
   event_name: string;
@@ -6,30 +11,13 @@ export const BookingEventDetails: React.FC<{
   onEventNameChange: (val: string) => void;
   onDateChange: (val: string) => void;
 }> = ({ event_name, date, onEventNameChange, onDateChange }) => {
-  const minDate = new Date().toISOString().split("T")[0];
+  const minDate = new Date();
   const maxDate = (() => {
     const d = new Date();
     d.setFullYear(d.getFullYear() + 3);
-    return d.toISOString().split("T")[0];
+    return d;
   })();
   const [dateError, setDateError] = React.useState("");
-
-  const handleDateBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (val) {
-      if (val < minDate) {
-        setDateError(`Date must not be before today.`);
-        onDateChange("");
-      } else if (val > maxDate) {
-        setDateError(`Date must not be later than 3 years from today.`);
-        onDateChange("");
-      } else {
-        setDateError("");
-      }
-    } else {
-      setDateError("");
-    }
-  };
 
   return (
     <div className="mb-4">
@@ -46,14 +34,33 @@ export const BookingEventDetails: React.FC<{
       <label className="block font-bold mb-2 dark:text-blue-300">
         Event Date
       </label>
-      <input
-        type="date"
+      <DatePicker
+        selected={date ? new Date(date) : null}
+        onChange={(d: Date | null) => {
+          if (!d) {
+            onDateChange("");
+            setDateError("");
+            return;
+          }
+          if (d < minDate) {
+            setDateError("Date must not be before today.");
+            onDateChange("");
+          } else if (d > maxDate) {
+            setDateError("Date must not be later than 3 years from today.");
+            onDateChange("");
+          } else {
+            setDateError("");
+            onDateChange(d.toISOString().split("T")[0]);
+          }
+        }}
+        minDate={minDate}
+        maxDate={maxDate}
+        dateFormat="yyyy-MM-dd"
         className={`w-full p-2 border rounded ${dateError ? "border-red-400" : ""}`}
-        value={date}
-        min={minDate}
-        max={maxDate}
-        onChange={(e) => onDateChange(e.target.value)}
-        onBlur={handleDateBlur}
+        placeholderText="Select event date"
+        showPopperArrow={false}
+        disabledKeyboardNavigation
+        dayClassName={(date: Date) => date < minDate ? "bg-gray-200 text-gray-400" : ""}
       />
       {dateError && (
         <div className="text-red-500 text-sm mt-1">{dateError}</div>
