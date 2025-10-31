@@ -90,16 +90,16 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
           ),
         }),
       });
-      if (!res.ok) {
-        const data = await res.json();
+      const data = await res.json();
+      if (!res.ok || !data.addresses) {
         throw new Error(data.error || "Failed to add address");
       }
-      setLocalAddresses(updatedAddresses);
+      setLocalAddresses(data.addresses);
       setNewLabel("");
       setNewAddress("");
       setNewZip("");
       setNewState("");
-      onSave({ ...profile, name, surname }, updatedAddresses);
+      onSave({ ...profile, name, surname }, data.addresses);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -129,11 +129,12 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
           ),
         }),
       });
-      if (!res.ok) {
-        const data = await res.json();
+      const data = await res.json();
+      if (!res.ok || !data.addresses) {
         throw new Error(data.error || "Failed to update profile");
       }
-      onSave({ ...profile, name, surname }, localAddresses);
+      setLocalAddresses(data.addresses);
+      onSave({ ...profile, name, surname }, data.addresses);
     } catch (err: any) {
       setError(err.message);
     } finally {

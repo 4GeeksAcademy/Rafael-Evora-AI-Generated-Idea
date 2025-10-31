@@ -139,7 +139,7 @@ export const Navbar: React.FC = () => {
           {/* User profile link/text completely removed from mobile nav */}
           <button
             onClick={() => setCartOpen(!cartOpen)}
-            className="relative px-2 py-2 rounded-xl bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 shadow border border-blue-300 dark:border-blue-700 ml-2"
+            className="relative px-2 py-2 rounded-xl bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 shadow border border-blue-300 dark:border-blue-700 ml-2 mr-2"
           >
             <svg
               fill="none"
@@ -160,12 +160,14 @@ export const Navbar: React.FC = () => {
           </button>
           <ThemeToggle />
           {cartOpen && (
-            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-900 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+            <div className="absolute right-0 top-12 w-80 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 dark:from-blue-200 dark:via-blue-400 dark:to-blue-900 shadow-2xl rounded-2xl border-4 border-blue-200 dark:border-blue-300 z-50 p-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
               <h3 className="text-lg font-extrabold mb-2 text-blue-700 drop-shadow-xl animate-pulse dark:text-blue-300">
                 Your Cart
               </h3>
               {items.length === 0 ? (
-                <span className="text-blue-700">Cart is empty</span>
+                <span className="text-blue-700 dark:text-blue-200">
+                  Cart is empty
+                </span>
               ) : (
                 items.map((item, idx) => {
                   return (

@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     lighting
   } = body;
 
-  if (!event_name || !event_date) {
+  if (!event_date) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 

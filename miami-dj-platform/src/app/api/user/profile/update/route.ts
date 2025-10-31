@@ -44,7 +44,8 @@ export async function POST(request: Request) {
   // Update addresses (replace all for simplicity)
   if (Array.isArray(addresses)) {
     // Remove all user-address links for this user
-    await supabase.from("user_addresses").delete().eq("user_id", user_id);
+    const { error: delError } = await supabase.from("user_addresses").delete().eq("user_id", user_id);
+    if (delError) console.error("Error deleting user_addresses links:", delError);
 
     for (const addr of addresses) {
       let addressId = addr.id;
@@ -59,22 +60,35 @@ export async function POST(request: Request) {
             state: addr.state || null,
           })
           .select("*");
-        if (insertError) continue;
-        addressId = newAddrArr && Array.isArray(newAddrArr) ? newAddrArr[0]?.id : undefined;
+        if (insertError || !newAddrArr || !newAddrArr[0]?.id) {
+          console.error("Error inserting address:", insertError, newAddrArr);
+          continue;
+        }
+        addressId = newAddrArr[0].id;
       } else {
         // Update address details if needed
-        await supabase.from("addresses").update({
+        const { error: updateError } = await supabase.from("addresses").update({
           label: addr.label,
           address: addr.address,
           zip_code: addr.zip_code || null,
           state: addr.state || null,
         }).eq("id", addressId);
+        if (updateError) console.error("Error updating address:", updateError);
       }
       // Link user and address in join table
       if (addressId) {
-        await supabase.from("user_addresses").insert({ user_id, address_id: addressId });
+        const { error: linkError } = await supabase.from("user_addresses").insert({ user_id, address_id: addressId });
+        if (linkError) console.error("Error linking user to address:", linkError);
       }
     }
+    // Fetch updated addresses for user
+    const { data: addressesData, error: addressesError } = await supabase
+      .from("user_addresses")
+      .select("address:addresses(id, label, address, zip_code, state)")
+      .eq("user_id", user_id);
+    if (addressesError) console.error("Error fetching addresses:", addressesError);
+    const addressesList = (addressesData || []).map((row: any) => row.address);
+    return NextResponse.json({ success: true, addresses: addressesList });
   }
 
   return NextResponse.json({ success: true });
