@@ -42,13 +42,13 @@ const AddressList: React.FC<AddressListProps> = ({
                 {addr.state && (
                   <span className="ml-2">State: {addr.state}</span>
                 )}
-                <button
+                {/* <button
                   className="ml-auto px-2 py-1 rounded bg-blue-500 text-white hover:bg-blue-700"
                   onClick={onEditProfile}
                   title="Edit address in profile"
                 >
                   Edit
-                </button>
+                </button> */}
               </div>
             </li>
           ))}
